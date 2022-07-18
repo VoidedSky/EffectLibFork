@@ -19,6 +19,7 @@ import de.slikey.effectlib.util.VectorUtils;
 import de.slikey.effectlib.math.EquationStore;
 import de.slikey.effectlib.math.EquationTransform;
 
+@SuppressWarnings({"unused"})
 public class ModifiedEffect extends Effect {
     private final static String[] _variables = {"t", "i", "a", "b"};
     private final static List<String> variables = Arrays.asList(_variables);

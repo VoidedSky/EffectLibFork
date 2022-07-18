@@ -11,6 +11,7 @@ import de.slikey.effectlib.util.ConfigUtils;
 
 import org.bukkit.configuration.ConfigurationSection;
 
+@SuppressWarnings({"unused"})
 public class Transforms {
 
     private static final String TRANSFORM_BUILTIN_CLASSPATH = "de.slikey.effectlib.math";

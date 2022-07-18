@@ -9,6 +9,7 @@ import de.slikey.effectlib.EffectType;
 import de.slikey.effectlib.EffectManager;
 import de.slikey.effectlib.util.RandomUtils;
 
+@SuppressWarnings({"unused"})
 public class BleedEffect extends de.slikey.effectlib.Effect {
 
     /**

@@ -10,6 +10,7 @@ import de.slikey.effectlib.EffectType;
 import de.slikey.effectlib.EffectManager;
 import de.slikey.effectlib.util.VectorUtils;
 
+@SuppressWarnings({"unused"})
 public class LineEffect extends Effect {
 
     /**

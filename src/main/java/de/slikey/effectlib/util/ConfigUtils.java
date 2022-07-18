@@ -8,6 +8,7 @@ import java.util.Collection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.ConfigurationSection;
 
+@SuppressWarnings({"unused"})
 public class ConfigUtils {
 
     public static Collection<ConfigurationSection> getNodeList(ConfigurationSection node, String path) {

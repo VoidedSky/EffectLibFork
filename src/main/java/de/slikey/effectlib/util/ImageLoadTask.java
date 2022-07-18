@@ -15,6 +15,7 @@ import javax.imageio.stream.ImageInputStream;
 
 import de.slikey.effectlib.EffectManager;
 
+@SuppressWarnings({"unused"})
 public class ImageLoadTask implements Runnable {
 
     private static final int REQUEST_TIMEOUT = 30000;

@@ -12,6 +12,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+@SuppressWarnings({"unused"})
 public class CustomSound {
     private static boolean initializedReflection;
     private static Method player_playCustomSoundMethod;

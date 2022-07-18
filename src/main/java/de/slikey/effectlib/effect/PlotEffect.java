@@ -13,6 +13,7 @@ import de.slikey.effectlib.EffectManager;
 import de.slikey.effectlib.math.EquationStore;
 import de.slikey.effectlib.math.EquationTransform;
 
+@SuppressWarnings({"unused"})
 public class PlotEffect extends Effect {
 
     private final static String[] _variables = {"t", "i"};

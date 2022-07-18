@@ -6,6 +6,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import de.slikey.effectlib.util.VectorUtils;
 
+@SuppressWarnings({"unused"})
 public class VectorTransform {
 
     private Transform xTransform;

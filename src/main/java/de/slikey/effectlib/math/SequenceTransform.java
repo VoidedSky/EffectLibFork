@@ -9,6 +9,7 @@ import de.slikey.effectlib.util.ConfigUtils;
 
 import org.bukkit.configuration.ConfigurationSection;
 
+@SuppressWarnings({"unused"})
 public class SequenceTransform implements Transform {
 
     private List<Sequence> steps;

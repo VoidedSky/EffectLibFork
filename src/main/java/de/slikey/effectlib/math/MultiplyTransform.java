@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.bukkit.configuration.ConfigurationSection;
 
+@SuppressWarnings({"unused"})
 public class MultiplyTransform implements Transform {
 
     private Collection<Transform> inputs;

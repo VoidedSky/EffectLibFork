@@ -14,6 +14,7 @@ import de.slikey.effectlib.util.VectorUtils;
  *
  * @author <a href="http://forums.bukkit.org/members/qukie.90952701/">Qukie</a>
  */
+@SuppressWarnings({"unused"})
 public class HeartEffect extends Effect {
 
     /**

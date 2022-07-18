@@ -11,6 +11,7 @@ import de.slikey.effectlib.util.VectorUtils;
 import de.slikey.effectlib.math.EquationStore;
 import de.slikey.effectlib.math.EquationTransform;
 
+@SuppressWarnings({"unused"})
 public class EquationEffect extends Effect {
 
     /**

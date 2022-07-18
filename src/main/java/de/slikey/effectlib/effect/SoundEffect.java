@@ -5,6 +5,7 @@ import de.slikey.effectlib.EffectManager;
 import de.slikey.effectlib.EffectType;
 import de.slikey.effectlib.util.CustomSound;
 
+@SuppressWarnings({"unused"})
 public class SoundEffect extends Effect {
 
     /**

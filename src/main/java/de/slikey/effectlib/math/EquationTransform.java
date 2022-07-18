@@ -12,6 +12,7 @@ import net.objecthunter.exp4j.ExpressionBuilder;
 import net.objecthunter.exp4j.VariableProvider;
 import net.objecthunter.exp4j.function.Function;
 
+@SuppressWarnings({"unused"})
 public class EquationTransform implements Transform, VariableProvider {
 
     private Expression expression;

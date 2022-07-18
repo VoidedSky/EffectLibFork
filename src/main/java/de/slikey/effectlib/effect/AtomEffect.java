@@ -11,6 +11,7 @@ import de.slikey.effectlib.EffectManager;
 import de.slikey.effectlib.util.RandomUtils;
 import de.slikey.effectlib.util.VectorUtils;
 
+@SuppressWarnings({"unused"})
 public class AtomEffect extends Effect {
 
     /**

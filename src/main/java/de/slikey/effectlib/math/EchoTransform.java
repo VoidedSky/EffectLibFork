@@ -2,6 +2,7 @@ package de.slikey.effectlib.math;
 
 import org.bukkit.configuration.ConfigurationSection;
 
+@SuppressWarnings({"unused"})
 public class EchoTransform implements Transform {
 
     @Override

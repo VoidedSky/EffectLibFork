@@ -13,6 +13,7 @@ import de.slikey.effectlib.util.VectorUtils;
  *
  * @author Kevin
  */
+@SuppressWarnings({"unused"})
 public class HillEffect extends Effect {
 
     /**

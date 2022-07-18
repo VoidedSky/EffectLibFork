@@ -16,6 +16,7 @@ import de.slikey.effectlib.util.MathUtils;
 import de.slikey.effectlib.util.VectorUtils;
 import de.slikey.effectlib.util.StringParser;
 
+@SuppressWarnings({"unused"})
 public class TextEffect extends Effect {
 
     /**

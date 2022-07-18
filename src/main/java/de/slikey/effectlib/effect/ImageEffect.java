@@ -9,6 +9,7 @@ import org.bukkit.util.Vector;
 import de.slikey.effectlib.EffectManager;
 import de.slikey.effectlib.util.BaseImageEffect;
 
+@SuppressWarnings({"unused"})
 public class ImageEffect extends BaseImageEffect {
 
     /**

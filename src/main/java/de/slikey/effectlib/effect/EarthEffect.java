@@ -15,6 +15,7 @@ import de.slikey.effectlib.util.MathUtils;
 import de.slikey.effectlib.util.RandomUtils;
 import de.slikey.effectlib.util.VectorUtils;
 
+@SuppressWarnings({"unused"})
 public class EarthEffect extends Effect {
 
     public Particle particleLand = Particle.VILLAGER_HAPPY;

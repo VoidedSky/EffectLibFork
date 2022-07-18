@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import de.slikey.effectlib.util.ParticleDisplay;
 import de.slikey.effectlib.util.ParticleOptions;
 
+@SuppressWarnings({"unused"})
 public class ParticleDisplay_17 extends ParticleDisplay {
 
     @Override

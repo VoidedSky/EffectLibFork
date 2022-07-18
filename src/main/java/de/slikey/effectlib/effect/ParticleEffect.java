@@ -6,6 +6,7 @@ import de.slikey.effectlib.Effect;
 import de.slikey.effectlib.EffectManager;
 import de.slikey.effectlib.EffectType;
 
+@SuppressWarnings({"unused"})
 public class ParticleEffect extends Effect {
 
     /**

@@ -12,6 +12,7 @@ import org.bukkit.material.MaterialData;
 import de.slikey.effectlib.util.ParticleDisplay;
 import de.slikey.effectlib.util.ParticleOptions;
 
+@SuppressWarnings({"unused"})
 public class ParticleDisplay_12 extends ParticleDisplay {
 
     @Override

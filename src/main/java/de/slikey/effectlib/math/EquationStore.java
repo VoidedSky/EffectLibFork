@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
+@SuppressWarnings({"unused"})
 public class EquationStore {
 
     private static final String DEFAULT_VARIABLE = "x";

@@ -48,6 +48,7 @@ import de.slikey.effectlib.util.ParticleOptions;
  * @author Kevin
  *
  */
+@SuppressWarnings({"unused"})
 public class EffectManager implements Disposable {
 
     private static List<EffectManager> effectManagers = new ArrayList<>();

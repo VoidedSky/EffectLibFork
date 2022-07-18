@@ -12,6 +12,7 @@ import de.slikey.effectlib.Effect;
 import de.slikey.effectlib.EffectType;
 import de.slikey.effectlib.EffectManager;
 
+@SuppressWarnings({"unused"})
 public class TraceEffect extends Effect {
 
     /**

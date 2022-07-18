@@ -14,6 +14,7 @@ import de.slikey.effectlib.util.MathUtils;
 import de.slikey.effectlib.util.RandomUtils;
 import de.slikey.effectlib.util.VectorUtils;
 
+@SuppressWarnings({"unused"})
 public class DragonEffect extends Effect {
 
     protected final List<Float> rndF;

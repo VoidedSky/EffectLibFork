@@ -10,6 +10,7 @@ import org.bukkit.entity.LivingEntity;
 /**
  * Represents a Location that can move, possibly bound to an Entity.
  */
+@SuppressWarnings({"unused"})
 public class DynamicLocation {
 
     private final Location location;

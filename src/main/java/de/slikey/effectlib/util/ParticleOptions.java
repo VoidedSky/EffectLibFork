@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 
+@SuppressWarnings({"unused"})
 public class ParticleOptions {
     public Color color;
     public Color toColor;

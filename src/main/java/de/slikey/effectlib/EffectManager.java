@@ -42,12 +42,6 @@ import de.slikey.effectlib.util.ImageLoadTask;
 import de.slikey.effectlib.util.ParticleDisplay;
 import de.slikey.effectlib.util.ParticleOptions;
 
-/**
- * Dispose the EffectManager if you don't need him anymore.
- *
- * @author Kevin
- *
- */
 @SuppressWarnings({"unused"})
 public class EffectManager implements Disposable {
 

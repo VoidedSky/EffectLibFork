@@ -76,7 +76,7 @@ public class DnaEffect extends Effect {
         super(effectManager);
         type = EffectType.REPEATING;
         period = 1;
-        iterations = 500;
+        iterations = 80;
     }
 
     @Override

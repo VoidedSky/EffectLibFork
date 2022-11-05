@@ -34,15 +34,3 @@ jobs:
         uses: gradle/gradle-build-action@v2.2.0
         with:
           arguments: build --stacktrace
-      - name: Edit Release
-        uses: ncipollo/release-action@v1.10.0
-        with:
-          artifacts: "build/libs/*.jar"
-          name: "Latest Build"
-          tag: effectlib
-          commit: main
-          allowUpdates: true
-          body: |
-            **Related Commit:**
-            `${{ github.event.head_commit.message }}` [click here to view!](https://github.com/${{ github.event.repository.full_name }}/commit/${{ github.event.head_commit.id }})
-          generateReleaseNotes: true

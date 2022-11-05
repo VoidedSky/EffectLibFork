@@ -1,3 +1,5 @@
+## Note: This is a VoidedSky fork of this plugin!
+
 EffectLib - Manage your effects the nice way.
 =========
 

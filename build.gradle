@@ -7,6 +7,8 @@ plugins {
     id 'maven-publish'
 }
 
+version = "voidedsky-fork"
+
 repositories {
     mavenLocal()
     maven {
@@ -20,7 +22,8 @@ repositories {
 
 dependencies {
     implementation 'com.elmakers.math:exp4j:1.0'
-    compileOnly 'org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    compileOnly 'org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT'
 }
 
 def targetJavaVersion = 17

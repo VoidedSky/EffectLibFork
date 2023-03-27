@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.lang.reflect.Field;
 
 import com.google.common.base.CaseFormat;
+import org.bukkit.Location;
+import org.bukkit.util.Vector;
+import org.bukkit.configuration.ConfigurationSection;
 
 import org.bukkit.Location;
 import org.bukkit.util.Vector;

@@ -53,18 +53,15 @@ public class ParticleDisplay_17 extends ParticleDisplay {
         }
 
         if (particle == Particle.VIBRATION) {
-            if (options.target == null) {
-                return;
-            }
+            if (options.target == null) return;
+
             Vibration.Destination destination;
             Entity targetEntity = options.target.getEntity();
-            if (targetEntity != null) {
-                destination = new Vibration.Destination.EntityDestination(targetEntity);
-            } else {
+            if (targetEntity != null) destination = new Vibration.Destination.EntityDestination(targetEntity);
+            else {
                 Location targetLocation = options.target.getLocation();
-                if (targetLocation == null) {
-                    return;
-                }
+                if (targetLocation == null) return;
+
                 destination = new Vibration.Destination.BlockDestination(targetLocation);
             }
 
@@ -73,4 +70,5 @@ public class ParticleDisplay_17 extends ParticleDisplay {
 
         spawnParticle(particle, options, center, range, targetPlayers);
     }
+
 }

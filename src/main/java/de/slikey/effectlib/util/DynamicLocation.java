@@ -16,15 +16,19 @@ public class DynamicLocation {
     private final Location location;
     private final Location originalLocation;
     private final WeakReference<Entity> entity;
+
     private float yawOffset;
     private float pitchOffset;
+
     private Vector offset;
     private Vector relativeOffset;
     private Vector entityOffset;
-    private boolean updateLocation = true;
-    private boolean updateDirection = true;
+
     private Float yaw = null;
     private Float pitch = null;
+
+    private boolean updateLocation = true;
+    private boolean updateDirection = true;
 
     public DynamicLocation(Location location) {
         if (location != null) this.location = location.clone();
@@ -165,6 +169,16 @@ public class DynamicLocation {
     public boolean hasValidEntity() {
         Entity entity = this.getEntity();
         return entity != null && entity.isValid();
+    }
+
+    @Override
+    public DynamicLocation clone() {
+        try {
+            return (DynamicLocation) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }

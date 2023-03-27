@@ -40,7 +40,7 @@ public class DnaEffect extends Effect {
     /**
      * Radius of dna-double-helix
      */
-    public float radius = 1.5f;
+    public float radius = 1.5F;
 
     /**
      * Particles to spawn per interation
@@ -60,7 +60,7 @@ public class DnaEffect extends Effect {
     /**
      * Growth per particle
      */
-    public float grow = 0.2f;
+    public float grow = 0.2F;
 
     /**
      * Particles between every base
@@ -87,26 +87,33 @@ public class DnaEffect extends Effect {
     @Override
     public void onRun() {
         Location location = getLocation();
+
+        double angle;
+        Vector v;
+        Particle particle;
+        Color color;
+
         for (int j = 0; j < particlesHelix; j++) {
             if (step * grow > length) step = 0;
 
             for (int i = 0; i < 2; i++) {
-                double angle = step * radials + Math.PI * i;
-                Vector v = new Vector(Math.cos(angle) * radius, step * grow, Math.sin(angle) * radius);
+                angle = step * radials + Math.PI * i;
+                v = new Vector(Math.cos(angle) * radius, step * grow, Math.sin(angle) * radius);
                 drawParticle(location, v, particleHelix, colorHelix);
             }
+
             if (step % baseInterval == 0) {
                 for (int i = -particlesBase; i <= particlesBase; i++) {
                     if (i == 0) continue;
 
-                    Particle particle = particleBase1;
-                    Color color = colorBase1;
+                    particle = particleBase1;
+                    color = colorBase1;
                     if (i < 0) {
                         particle = particleBase2;
                         color = colorBase2;
                     }
-                    double angle = step * radials;
-                    Vector v = new Vector(Math.cos(angle), 0, Math.sin(angle)).multiply(radius * i / particlesBase).setY(step * grow);
+                    angle = step * radials;
+                    v = new Vector(Math.cos(angle), 0, Math.sin(angle)).multiply(radius * i / particlesBase).setY(step * grow);
                     drawParticle(location, v, particle, color);
                 }
             }

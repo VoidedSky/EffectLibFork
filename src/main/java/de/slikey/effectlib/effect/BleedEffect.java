@@ -1,10 +1,10 @@
 package de.slikey.effectlib.effect;
 
-import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 
+import de.slikey.effectlib.Effect;
 import de.slikey.effectlib.EffectType;
 import de.slikey.effectlib.EffectManager;
 import de.slikey.effectlib.util.RandomUtils;
@@ -39,9 +39,10 @@ public class BleedEffect extends de.slikey.effectlib.Effect {
         // Location to spawn the blood-item.
         Location location = getLocation();
         location.add(0, RandomUtils.random.nextFloat() * height, 0);
-        location.getWorld().playEffect(location, Effect.STEP_SOUND, material);
+        location.getWorld().playEffect(location, org.bukkit.Effect.STEP_SOUND, material);
 
         Entity entity = getEntity();
         if (hurt && entity != null) entity.playEffect(org.bukkit.EntityEffect.HURT);
     }
+
 }

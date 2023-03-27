@@ -18,11 +18,6 @@ import de.slikey.effectlib.util.VectorUtils;
 public class HeartEffect extends Effect {
 
     /**
-     * ParticleType of spawned particle
-     */
-    public Particle particle = Particle.CRIT_MAGIC;
-
-    /**
      * Heart-particles per interation (100)
      */
     public int particles = 50;
@@ -60,9 +55,13 @@ public class HeartEffect extends Effect {
     public void onRun() {
         Location location = getLocation();
         Vector vector = new Vector();
+
+        float alpha;
+        double phi;
+
         for (int i = 0; i < particles; i++) {
-            float alpha = ((MathUtils.PI / compilation) / particles) * i;
-            double phi = Math.pow(Math.abs(MathUtils.sin(2 * compilation * alpha)) + factorInnerSpike * Math.abs(MathUtils.sin(compilation * alpha)), 1 / compressYFactorTotal);
+            alpha = ((MathUtils.PI / compilation) / particles) * i;
+            phi = Math.pow(Math.abs(MathUtils.sin(2 * compilation * alpha)) + factorInnerSpike * Math.abs(MathUtils.sin(compilation * alpha)), 1 / compressYFactorTotal);
 
             vector.setY(phi * (MathUtils.sin(alpha) + MathUtils.cos(alpha)) * yFactor);
             vector.setZ(phi * (MathUtils.cos(alpha) - MathUtils.sin(alpha)) * xFactor);

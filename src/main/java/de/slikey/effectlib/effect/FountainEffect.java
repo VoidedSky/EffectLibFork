@@ -1,7 +1,6 @@
 package de.slikey.effectlib.effect;
 
 import org.bukkit.Location;
-import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 
 import de.slikey.effectlib.Effect;
@@ -11,11 +10,6 @@ import de.slikey.effectlib.util.RandomUtils;
 
 @SuppressWarnings({"unused"})
 public class FountainEffect extends Effect {
-
-    /**
-     * Particle of the fountain
-     */
-    public Particle particle = Particle.WATER_SPLASH;
 
     /**
      * Amount of strands (10)
@@ -40,7 +34,7 @@ public class FountainEffect extends Effect {
     /**
      * Radius of spout as a fraction of the fountain (0.1)
      */
-    public float radiusSpout = .1f;
+    public float radiusSpout = 0.1F;
 
     /**
      * Height of the fountain
@@ -67,21 +61,30 @@ public class FountainEffect extends Effect {
     @Override
     public void onRun() {
         Location location = getLocation();
+
+        double angle;
+        float ratio;
+        double x, y, z;
+        Vector v;
+
         for (int i = 1; i <= strands; i++) {
-            double angle = 2 * i * Math.PI / strands + rotation;
+            angle = 2 * i * Math.PI / strands + rotation;
             for (int j = 1; j <= particlesStrand; j++) {
-                float ratio = (float) j / particlesStrand;
-                double x, y, z;
+
+                ratio = (float) j / particlesStrand;
+
                 x = Math.cos(angle) * radius * ratio;
                 y = Math.sin(Math.PI * j / particlesStrand) * height;
                 z = Math.sin(angle) * radius * ratio;
+
                 location.add(x, y, z);
                 display(particle, location);
                 location.subtract(x, y, z);
             }
         }
+
         for (int i = 0; i < particlesSpout; i++) {
-            Vector v = RandomUtils.getRandomCircleVector().multiply(RandomUtils.random.nextFloat() * radius * radiusSpout);
+            v = RandomUtils.getRandomCircleVector().multiply(RandomUtils.random.nextFloat() * radius * radiusSpout);
             v.setY(RandomUtils.random.nextFloat() * heightSpout);
             location.add(v);
             display(particle, location);

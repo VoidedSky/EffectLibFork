@@ -1,6 +1,5 @@
 package de.slikey.effectlib.effect;
 
-import org.bukkit.Particle;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
@@ -12,11 +11,6 @@ import de.slikey.effectlib.util.VectorUtils;
 
 @SuppressWarnings({"unused"})
 public class CubeEffect extends Effect {
-
-    /**
-     * Particle of the cube
-     */
-    public Particle particle = Particle.FLAME;
 
     /**
      * Length of the edges
@@ -128,21 +122,28 @@ public class CubeEffect extends Effect {
 
     private void drawCubeWalls(Location location) {
         double xRotation = 0, yRotation = 0, zRotation = 0;
+
         if (enableRotation) {
             xRotation = step * angularVelocityX;
             yRotation = step * angularVelocityY;
             zRotation = step * angularVelocityZ;
         }
+
         float a = edgeLength / 2;
+        float posX;
+        float posY;
+        float posZ;
+        Vector v;
+
         for (int x = 0; x <= particles; x++) {
-            float posX = edgeLength * ((float) x / particles) - a;
+            posX = edgeLength * ((float) x / particles) - a;
             for (int y = 0; y <= particles; y++) {
-                float posY = edgeLength * ((float) y / particles) - a;
+                posY = edgeLength * ((float) y / particles) - a;
                 for (int z = 0; z <= particles; z++) {
                     if (x != 0 && x != particles && y != 0 && y != particles && z != 0 && z != particles) continue;
 
-                    float posZ = edgeLength * ((float) z / particles) - a;
-                    Vector v = new Vector(posX, posY, posZ);
+                    posZ = edgeLength * ((float) z / particles) - a;
+                    v = new Vector(posX, posY, posZ);
                     if (enableRotation) VectorUtils.rotateVector(v, xRotation, yRotation, zRotation);
                     if (orient) rotateLocation(location, v);
 

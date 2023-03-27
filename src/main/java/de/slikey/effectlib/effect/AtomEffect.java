@@ -34,7 +34,7 @@ public class AtomEffect extends Effect {
     /**
      * Radius of the nucleus as a fraction of the atom-radius
      */
-    public float radiusNucleus = .2f;
+    public float radiusNucleus = 0.2f;
 
     /**
      * Particles to be spawned in the nucleus per iteration
@@ -64,7 +64,7 @@ public class AtomEffect extends Effect {
     /**
      * Velocity of the orbitals
      */
-    public double angularVelocity = Math.PI / 80d;
+    public double angularVelocity = Math.PI / 80D;
 
     /**
      * Internal counter
@@ -86,22 +86,30 @@ public class AtomEffect extends Effect {
     @Override
     public void onRun() {
         Location location = getLocation();
+
+        Vector v;
+        double angle;
+        double xRotation;
+
         for (int i = 0; i < particlesNucleus; i++) {
-            Vector v = RandomUtils.getRandomVector().multiply(radius * radiusNucleus);
+            v = RandomUtils.getRandomVector().multiply(radius * radiusNucleus);
             if (orient) v = VectorUtils.rotateVector(v, location);
+
             location.add(v);
             display(particleNucleus, location, colorNucleus);
             location.subtract(v);
         }
 
         for (int i = 0; i < particlesOrbital; i++) {
-            double angle = step * angularVelocity;
+            angle = step * angularVelocity;
             for (int j = 0; j < orbitals; j++) {
-                double xRotation = (Math.PI / orbitals) * j;
-                Vector v = new Vector(Math.cos(angle), Math.sin(angle), 0).multiply(radius);
+                xRotation = (Math.PI / orbitals) * j;
+                v = new Vector(Math.cos(angle), Math.sin(angle), 0).multiply(radius);
+
                 VectorUtils.rotateAroundAxisX(v, xRotation);
                 VectorUtils.rotateAroundAxisY(v, rotation);
                 if (orient) v = VectorUtils.rotateVector(v, location);
+
                 location.add(v);
                 display(particleOrbital, location, colorOrbital);
                 location.subtract(v);

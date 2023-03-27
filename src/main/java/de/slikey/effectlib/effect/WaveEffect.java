@@ -17,7 +17,6 @@ import de.slikey.effectlib.util.VectorUtils;
 @SuppressWarnings({"unused"})
 public class WaveEffect extends Effect {
 
-    public Particle particle = Particle.DRIP_WATER;
     public Particle cloudParticle = Particle.CLOUD;
     public Color cloudColor = null;
 
@@ -50,7 +49,7 @@ public class WaveEffect extends Effect {
     /**
      * The distance from the origin location to the first point of the wave
      */
-    public float lengthFront = 1.5f;
+    public float lengthFront = 1.5F;
 
     /**
      * The distance from the origin location to the last point of the wave
@@ -65,7 +64,7 @@ public class WaveEffect extends Effect {
     /**
      * Height of the parabola arc forming the back
      */
-    public float heightBack = .5f;
+    public float heightBack = 0.5F;
 
     /**
      * Height of the wave in blocks
@@ -115,44 +114,54 @@ public class WaveEffect extends Effect {
         s1ToH = h.clone().subtract(s1);
         c1 = s1.clone().add(s1ToH.clone().multiply(0.5));
         len_s1ToH = (float) s1ToH.length();
-        n_s1ToH = s1ToH.clone().multiply(1f / len_s1ToH);
+        n_s1ToH = s1ToH.clone().multiply(1F / len_s1ToH);
         n1 = new Vector(s1ToH.getY(), -s1ToH.getX(), 0).normalize();
         if (n1.getX() < 0) n1.multiply(-1);
 
         s2ToH = h.clone().subtract(s2);
         c2 = s2.clone().add(s2ToH.clone().multiply(0.5));
         len_s2ToH = (float) s2ToH.length();
-        n_s2ToH = s2ToH.clone().multiply(1f / len_s2ToH);
+        n_s2ToH = s2ToH.clone().multiply(1F / len_s2ToH);
         n2 = new Vector(s2ToH.getY(), -s2ToH.getX(), 0).normalize();
         if (n2.getX() < 0) n2.multiply(-1);
 
         yaw = (-location.getYaw() + 90) * MathUtils.degreesToRadians;
 
+        float ratio;
+
+        float x;
+        float y;
+        float z;
+
+        Vector v;
+        Vector vec;
+
         for (int i = 0; i < particlesFront; i++) {
-            float ratio = (float) i / particlesFront;
-            float x = (ratio - .5f) * len_s1ToH;
-            float y = (float) (-depthFront / Math.pow((len_s1ToH / 2), 2) * Math.pow(x, 2) + depthFront);
-            Vector v = c1.clone();
+            ratio = (float) i / particlesFront;
+            x = (ratio - 0.5F) * len_s1ToH;
+            y = (float) (-depthFront / Math.pow((len_s1ToH / 2), 2) * Math.pow(x, 2) + depthFront);
+            v = c1.clone();
             v.add(n_s1ToH.clone().multiply(x));
             v.add(n1.clone().multiply(y));
             for (int j = 0; j < rows; j++) {
-                float z = ((float) j / rows - .5f) * width;
-                Vector vec = v.clone().setZ(v.getZ() + z);
+                z = ((float) j / rows - 0.5F) * width;
+                vec = v.clone().setZ(v.getZ() + z);
                 VectorUtils.rotateAroundAxisY(vec, yaw);
                 if (i == 0 || i == particlesFront - 1) cloudCache.add(vec);
                 else waterCache.add(vec);
             }
         }
+
         for (int i = 0; i < particlesBack; i++) {
-            float ratio = (float) i / particlesBack;
-            float x = (ratio - .5f) * len_s2ToH;
-            float y = (float) (-heightBack / Math.pow((len_s2ToH / 2), 2) * Math.pow(x, 2) + heightBack);
-            Vector v = c2.clone();
+            ratio = (float) i / particlesBack;
+            x = (ratio - 0.5F) * len_s2ToH;
+            y = (float) (-heightBack / Math.pow((len_s2ToH / 2), 2) * Math.pow(x, 2) + heightBack);
+            v = c2.clone();
             v.add(n_s2ToH.clone().multiply(x));
             v.add(n2.clone().multiply(y));
             for (int j = 0; j < rows; j++) {
-                float z = ((float) j / rows - .5f) * width;
-                Vector vec = v.clone().setZ(v.getZ() + z);
+                z = ((float) j / rows - 0.5F) * width;
+                vec = v.clone().setZ(v.getZ() + z);
                 VectorUtils.rotateAroundAxisY(vec, yaw);
                 if (i == particlesFront - 1) cloudCache.add(vec);
                 else waterCache.add(vec);
@@ -174,6 +183,7 @@ public class WaveEffect extends Effect {
             display(cloudParticle, location, cloudColor, 0, 1);
             location.subtract(v);
         }
+
         for (Vector v : waterCache) {
             location.add(v);
             display(particle, location);

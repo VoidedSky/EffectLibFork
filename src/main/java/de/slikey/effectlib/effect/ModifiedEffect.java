@@ -1,16 +1,16 @@
 package de.slikey.effectlib.effect;
 
-import java.lang.reflect.Field;
+import java.util.Map;
+import java.util.List;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.bukkit.Location;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.util.Vector;
+import java.lang.reflect.Field;
 
 import com.google.common.base.CaseFormat;
+
+import org.bukkit.Location;
+import org.bukkit.util.Vector;
+import org.bukkit.configuration.ConfigurationSection;
 
 import de.slikey.effectlib.Effect;
 import de.slikey.effectlib.EffectType;
@@ -136,30 +136,38 @@ public class ModifiedEffect extends Effect {
             innerEffect.material = material;
             innerEffect.materialData = materialData;
 
+            innerEffect.blockData = blockData;
+            innerEffect.blockDuration = blockDuration;
+
+            String equation;
+            String fieldName;
+
+            EquationTransform transform;
+            Exception ex;
+
+            Field field;
+
             for (Map.Entry<String, String> entry : parameters.entrySet()) {
-                String equation = entry.getValue();
-                String fieldName = entry.getKey();
+                equation = entry.getValue();
+                fieldName = entry.getKey();
 
                 // Allow underscore_style and dash_style parameters
-                if (fieldName.contains("-")) {
-                    fieldName = fieldName.replace("-", "_");
-                }
-                if (fieldName.contains("_")) {
-                    fieldName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, fieldName);
-                }
+                if (fieldName.contains("-")) fieldName = fieldName.replace("-", "_");
 
-                EquationTransform transform = EquationStore.getInstance().getTransform(equation, variables);
-                Exception ex = transform.getException();
+                if (fieldName.contains("_")) fieldName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, fieldName);
+
+                transform = EquationStore.getInstance().getTransform(equation, variables);
+                ex = transform.getException();
                 if (ex != null) {
-                    effectManager.onError("Error parsing equation: " + equation, ex);
+                    effectManager.onError("Error parsing equation: '" + equation + "'", ex);
                     continue;
                 }
 
                 try {
-                    Field field = innerEffect.getClass().getField(fieldName);
+                    field = innerEffect.getClass().getField(fieldName);
                     parameterTransforms.put(field, transform);
                 } catch (Exception ex2) {
-                    effectManager.onError("Error binding to field: " + fieldName + " of effect class " + effectClass, ex2);
+                    effectManager.onError("Error binding to field: '" + fieldName + "' of effect class: '" + effectClass + "'", ex2);
                     continue;
                 }
             }
@@ -194,8 +202,10 @@ public class ModifiedEffect extends Effect {
             previousOffset.add(offset);
         }
 
+        double value;
+
         for (Map.Entry<Field, EquationTransform> entry : parameterTransforms.entrySet()) {
-            double value = entry.getValue().get(step, maxIterations, variableA, variableB);
+            value = entry.getValue().get(step, maxIterations, variableA, variableB);
             try {
                 Field field = entry.getKey();
                 if (field.getType().equals(Double.class) || field.getType().equals(Double.TYPE)) {
@@ -209,12 +219,12 @@ public class ModifiedEffect extends Effect {
                 } else if (field.getType().equals(Byte.class) || field.getType().equals(Byte.TYPE)) {
                     entry.getKey().set(innerEffect, (byte) value);
                 } else {
-                    effectManager.onError("Can't assign property " + entry.getKey().getName() + " of effect class " + effectClass + " of type " + field.getType().getName());
+                    effectManager.onError("Can't assign property: '" + entry.getKey().getName() + "' of effect class: '" + effectClass + "' of type: '" + field.getType().getName() + "'");
                     cancel();
                     return;
                 }
             } catch (Exception ex) {
-                effectManager.onError("Error assigning to : " + entry.getKey().getName() + " of effect class " + effectClass, ex);
+                effectManager.onError("Error assigning to: '" + entry.getKey().getName() + "' of effect class: '" + effectClass + "'", ex);
                 cancel();
                 return;
             }

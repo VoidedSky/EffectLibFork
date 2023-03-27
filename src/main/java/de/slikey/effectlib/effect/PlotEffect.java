@@ -4,7 +4,6 @@ import java.util.Set;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import org.bukkit.Particle;
 import org.bukkit.Location;
 
 import de.slikey.effectlib.Effect;
@@ -18,11 +17,6 @@ public class PlotEffect extends Effect {
 
     private final static String[] _variables = {"t", "i"};
     private final static Set<String> variables = new HashSet<>(Arrays.asList(_variables));
-
-    /**
-     * ParticleType of spawned particle
-     */
-    public Particle particle = Particle.REDSTONE;
 
     /**
      * The equation to use for x-values. If not set, the iteration count will be used.
@@ -71,25 +65,33 @@ public class PlotEffect extends Effect {
     @Override
     public void onRun() {
         int base = persistent ? 0 : step;
+
+        Location location;
+        double xOffset;
+        double yOffset;
+        double zOffset;
+
+        EquationTransform transform;
+
         for (int i = base; i <= step; i++) {
-            Location location = getLocation().clone();
-            double xOffset = step;
-            double yOffset = step;
-            double zOffset = 0;
+            location = getLocation().clone();
+            xOffset = step;
+            yOffset = step;
+            zOffset = 0;
 
             if (xEquation != null && !xEquation.isEmpty()) {
-                EquationTransform xTransform = EquationStore.getInstance().getTransform(xEquation, variables);
-                xOffset = xTransform.get(i, maxIterations);
+                transform = EquationStore.getInstance().getTransform(xEquation, variables);
+                xOffset = transform.get(i, maxIterations);
             }
 
             if (yEquation != null && !yEquation.isEmpty()) {
-                EquationTransform yTransform = EquationStore.getInstance().getTransform(yEquation, variables);
-                yOffset = yTransform.get(i, maxIterations);
+                transform = EquationStore.getInstance().getTransform(yEquation, variables);
+                yOffset = transform.get(i, maxIterations);
             }
 
             if (zEquation != null && !zEquation.isEmpty()) {
-                EquationTransform zTransform = EquationStore.getInstance().getTransform(zEquation, variables);
-                zOffset = zTransform.get(i, maxIterations);
+                transform = EquationStore.getInstance().getTransform(zEquation, variables);
+                zOffset = transform.get(i, maxIterations);
             }
 
             location.add(xOffset * xScale, yOffset * yScale, zOffset * zScale);

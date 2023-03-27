@@ -1,6 +1,5 @@
 package de.slikey.effectlib.effect;
 
-import org.bukkit.Particle;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
@@ -11,11 +10,6 @@ import de.slikey.effectlib.util.RandomUtils;
 
 @SuppressWarnings({"unused"})
 public class ShieldEffect extends Effect {
-
-    /**
-     * ParticleType of spawned particle
-     */
-    public Particle particle = Particle.FLAME;
 
     /**
      * Radius of the shield
@@ -45,15 +39,17 @@ public class ShieldEffect extends Effect {
     @Override
     public void onRun() {
         Location location = getLocation();
+        Vector v;
         for (int i = 0; i < particles; i++) {
-            Vector vector = RandomUtils.getRandomVector().multiply(radius);
+            v = RandomUtils.getRandomVector().multiply(radius);
             if (!sphere) {
-                if (reverse) vector.setY(Math.abs(vector.getY()) * -1);
-                else vector.setY(Math.abs(vector.getY()));
+                if (reverse) v.setY(Math.abs(v.getY()) * -1);
+                else v.setY(Math.abs(v.getY()));
             }
-            location.add(vector);
+
+            location.add(v);
             display(particle, location);
-            location.subtract(vector);
+            location.subtract(v);
         }
     }
 

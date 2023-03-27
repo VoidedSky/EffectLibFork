@@ -14,9 +14,12 @@ import de.slikey.effectlib.EffectManager;
 import de.slikey.effectlib.util.versions.ParticleDisplay_12;
 import de.slikey.effectlib.util.versions.ParticleDisplay_13;
 import de.slikey.effectlib.util.versions.ParticleDisplay_17;
+import de.slikey.effectlib.util.versions.ParticleDisplay_19;
 
 public abstract class ParticleDisplay {
+
     protected EffectManager manager;
+
     private static boolean hasColorTransition = false;
 
     public abstract void display(Particle particle, ParticleOptions options, Location center, double range, List<Player> targetPlayers);
@@ -25,29 +28,46 @@ public abstract class ParticleDisplay {
         try {
             if (targetPlayers == null) {
                 double squared = range * range;
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    if (player.getWorld() != center.getWorld() || player.getLocation().distanceSquared(center) > squared) {
-                        continue;
-                    }
-                    if (!manager.isPlayerIgnored(player)) {
-                        player.spawnParticle(particle, center, options.amount, options.offsetX, options.offsetY, options.offsetZ, options.speed, options.data);
-                    }
+                for (final Player player : Bukkit.getOnlinePlayers()) {
+                    if (manager.isPlayerIgnored(player)) continue;
+                    if (player.getWorld() != center.getWorld()) continue;
+                    if (player.getLocation().distanceSquared(center) > squared) continue;
+
+                    player.spawnParticle(particle, center, options.amount, options.offsetX, options.offsetY, options.offsetZ, options.speed, options.data);
+                    displayFakeBlock(player, center, options);
                 }
-            } else {
-                for (Player player : targetPlayers) {
-                    if (!manager.isPlayerIgnored(player)) {
-                        player.spawnParticle(particle, center, options.amount, options.offsetX, options.offsetY, options.offsetZ, options.speed, options.data);
-                    }
-                }
+                return;
             }
+
+            for (final Player player : targetPlayers) {
+                if (manager.isPlayerIgnored(player)) continue;
+                player.spawnParticle(particle, center, options.amount, options.offsetX, options.offsetY, options.offsetZ, options.speed, options.data);
+                displayFakeBlock(player, center, options);
+            }
+
         } catch (Exception ex) {
             if (manager != null) manager.onError(ex);
         }
     }
 
+    protected void displayFakeBlock(final Player player, Location center, ParticleOptions options) {
+        if (options.blockData == null) return;
+        if (!center.getBlock().isPassable() && !center.getBlock().isEmpty()) return;
+
+        final Location b = center.getBlock().getLocation().clone();
+        player.sendBlockChange(b, options.blockData);
+
+        Bukkit.getScheduler().runTaskLaterAsynchronously(manager.getOwningPlugin(), new Runnable() {
+            @Override
+            public void run() {
+                player.sendBlockChange(b, b.getBlock().getBlockData());
+            }
+        }, options.blockDuration);
+    }
+
     protected void displayItem(Particle particle, ParticleOptions options, Location center, double range, List<Player> targetPlayers) {
         Material material = options.material;
-        if (material == null || material == Material.AIR) return;
+        if (material == null || material.isAir()) return;
 
         ItemStack item = new ItemStack(material);
         item.setDurability(options.materialData);
@@ -58,9 +78,7 @@ public abstract class ParticleDisplay {
     protected void displayLegacyColored(Particle particle, ParticleOptions options, Location center, double range, List<Player> targetPlayers) {
         // Colored particles can't have a speed of 0.
         Color color = options.color;
-        if (color == null) {
-            color = Color.RED;
-        }
+        if (color == null) color = Color.RED;
         if (options.speed == 0) options.speed = 1;
         // Amount = 0 is a special flag that means use the offset as color
         options.amount = 0;
@@ -85,18 +103,26 @@ public abstract class ParticleDisplay {
 
     public static ParticleDisplay newInstance() {
         ParticleDisplay display;
+
         try {
-            Particle.valueOf("VIBRATION");
-            display = new ParticleDisplay_17();
+            Particle.valueOf("SHRIEK");
+            display = new ParticleDisplay_19();
             hasColorTransition = true;
-        } catch (Throwable not17) {
+        } catch (Throwable not19) {
             try {
-                Particle.valueOf("SQUID_INK");
-                display = new ParticleDisplay_13();
-            } catch (Throwable not13) {
-                display = new ParticleDisplay_12();
+                Particle.valueOf("VIBRATION");
+                display = new ParticleDisplay_17();
+                hasColorTransition = true;
+            } catch (Throwable not17) {
+                try {
+                    Particle.valueOf("SQUID_INK");
+                    display = new ParticleDisplay_13();
+                } catch (Throwable not13) {
+                    display = new ParticleDisplay_12();
+                }
             }
         }
+
         return display;
     }
 

@@ -32,22 +32,22 @@ public class TornadoEffect extends Effect {
     /*
      * Size of the cloud
      */
-    public float cloudSize = 2.5f;
+    public float cloudSize = 2.5F;
 
     /*
      * Y-Offset from location
      */
-    public double yOffset = .8;
+    public double yOffset = 0.8;
 
     /*
      * Height of the Tornado
      */
-    public float tornadoHeight = 5f;
+    public float tornadoHeight = 5F;
 
     /*
      * Max radius of the Tornado
      */
-    public float maxTornadoRadius = 5f;
+    public float maxTornadoRadius = 5F;
 
     /*
      * Should the cloud appear?
@@ -62,7 +62,7 @@ public class TornadoEffect extends Effect {
     /*
      * Distance between each row
      */
-    public double distance = .375d;
+    public double distance = 0.375;
 
     /*
      * Number of particles per circle
@@ -93,26 +93,30 @@ public class TornadoEffect extends Effect {
 
     @Override
     public void reset() {
-        this.step = 0;
+        step = 0;
     }
 
     @Override
     public void onRun() {
         Location l = getLocation().add(0, yOffset, 0);
+        Vector vector;
+
         for (int i = 0; i < (cloudParticles * cloudSize); i++) {
-            Vector v = RandomUtils.getRandomCircleVector().multiply(RandomUtils.random.nextDouble() * cloudSize);
+            vector = RandomUtils.getRandomCircleVector().multiply(RandomUtils.random.nextDouble() * cloudSize);
             if (showCloud) {
-                display(cloudParticle, l.add(v), cloudColor, cloudSpeed, 1);
-                l.subtract(v);
+                display(cloudParticle, l.add(vector), cloudColor, cloudSpeed, 1);
+                l.subtract(vector);
             }
         }
-        Location t = l.clone().add(0, .2, 0);
-        double r = .45 * (maxTornadoRadius * (2.35 / tornadoHeight));
+
+        Location t = l.clone().add(0, 0.2, 0);
+        double r = 0.45 * (maxTornadoRadius * (2.35 / tornadoHeight));
+        double fr;
+
         for (double y = 0; y < tornadoHeight; y += distance) {
-            double fr = r * y;
-            if (fr > maxTornadoRadius) {
-                fr = maxTornadoRadius;
-            }
+            fr = r * y;
+            if (fr > maxTornadoRadius) fr = maxTornadoRadius;
+
             for (Vector v : createCircle(y, fr)) {
                 if (showTornado) {
                     if (circleHeight > 0) v.setY(v.getY() + RandomUtils.random.nextDouble() * circleHeight / 2 - circleHeight / 2);
@@ -128,15 +132,21 @@ public class TornadoEffect extends Effect {
     public List<Vector> createCircle(double y, double radius) {
         double amount = radius * circleParticles;
         double inc = (2 * Math.PI) / amount;
-        List<Vector> vecs = new ArrayList<Vector>();
+        List<Vector> vectors = new ArrayList<>();
+
+        double angle;
+        double x;
+        double z;
+        Vector v;
+
         for (int i = 0; i < amount; i++) {
-            double angle = i * inc;
-            double x = radius * Math.cos(angle);
-            double z = radius * Math.sin(angle);
-            Vector v = new Vector(x, y, z);
-            vecs.add(v);
+            angle = i * inc;
+            x = radius * Math.cos(angle);
+            z = radius * Math.sin(angle);
+            v = new Vector(x, y, z);
+            vectors.add(v);
         }
-        return vecs;
+        return vectors;
     }
 
 }

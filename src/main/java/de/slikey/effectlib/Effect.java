@@ -11,11 +11,12 @@ import org.bukkit.Location;
 import org.bukkit.util.Vector;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.ConfigurationSection;
 
-import de.slikey.effectlib.util.ParticleOptions;
 import de.slikey.effectlib.util.RandomUtils;
 import de.slikey.effectlib.util.DynamicLocation;
+import de.slikey.effectlib.util.ParticleOptions;
 
 public abstract class Effect implements Runnable {
 
@@ -34,6 +35,11 @@ public abstract class Effect implements Runnable {
     public EffectType type = EffectType.INSTANT;
 
     /**
+     * ParticleType of spawned particle
+     */
+    public Particle particle = Particle.FLAME;
+
+    /**
      * Can be used to colorize certain particles. As of 1.8, those
      * include SPELL_MOB_AMBIENT, SPELL_MOB and REDSTONE.
      */
@@ -49,6 +55,16 @@ public abstract class Effect implements Runnable {
 
     public List<Color> toColorList = null;
     public String toColors = null;
+
+    /**
+     * Used only by the shriek particle in 1.19 and up
+     */
+    public int shriekDelay;
+
+    /**
+     * Used only by the sculk_charge particle in 1.19 and up
+     */
+    public float sculkChargeRotation;
 
     /**
      * Used only by the vibration particle in 1.17 and up
@@ -173,6 +189,10 @@ public abstract class Effect implements Runnable {
     public Material material;
     public byte materialData;
 
+    public BlockData blockData;
+
+    public long blockDuration;
+
     /**
      * These can be used to spawn multiple particles per packet.
      * It will not work with colored particles, however.
@@ -223,6 +243,8 @@ public abstract class Effect implements Runnable {
     public boolean disappearWithTargetEntity = false;
 
     private boolean done = false;
+
+    private boolean playing = false;
 
     private long startTime;
 
@@ -275,13 +297,16 @@ public abstract class Effect implements Runnable {
         return done;
     }
 
+    public boolean isPlaying() {
+        return playing;
+    }
+
     public abstract void onRun();
 
     /**
      * Called when this effect is done playing (when {@link #done()} is called).
      */
-    public void onDone() {
-    }
+    public void onDone() { }
 
     @Override
     public final void run() {
@@ -289,6 +314,7 @@ public abstract class Effect implements Runnable {
             cancel();
             return;
         }
+
         if (done) {
             effectManager.removeEffect(this);
             return;
@@ -328,6 +354,7 @@ public abstract class Effect implements Runnable {
     public final void start() {
         prepare();
         effectManager.start(this);
+        playing = true;
     }
 
     public final void infinite() {
@@ -480,8 +507,9 @@ public abstract class Effect implements Runnable {
                 currentToColor = toColorList.get(ThreadLocalRandom.current().nextInt(colorList.size()));
             }
 
-            ParticleOptions options = new ParticleOptions(particleOffsetX, particleOffsetY, particleOffsetZ, speed, amount, particleSize, currentColor, currentToColor, arrivalTime, material, materialData);
+            ParticleOptions options = new ParticleOptions(particleOffsetX, particleOffsetY, particleOffsetZ, speed, amount, particleSize, currentColor, currentToColor, arrivalTime, material, materialData, blockData, blockDuration, shriekDelay, sculkChargeRotation);
             options.target = target;
+
             effectManager.display(particle, options, location, visibleRange, targetPlayers);
         }
 
@@ -489,6 +517,7 @@ public abstract class Effect implements Runnable {
     }
 
     private void done() {
+        playing = false;
         done = true;
         effectManager.done(this);
         onDone();
@@ -518,6 +547,14 @@ public abstract class Effect implements Runnable {
         setDynamicOrigin(new DynamicLocation(location));
     }
 
+    public DynamicLocation getDynamicOrigin() {
+        return origin;
+    }
+
+    public DynamicLocation getDynamicTarget() {
+        return target;
+    }
+
     public void setTargetEntity(Entity entity) {
         target = new DynamicLocation(entity);
     }
@@ -542,7 +579,6 @@ public abstract class Effect implements Runnable {
         this.startTime = startTime;
     }
 
-    public void reloadParameters() {
+    public void reloadParameters() { }
 
-    }
 }

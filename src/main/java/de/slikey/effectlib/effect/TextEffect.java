@@ -94,8 +94,11 @@ public class TextEffect extends Effect {
             cancel();
             return;
         }
+
         Location location = getLocation();
         int clr;
+        Vector v;
+
         try {
             if (image == null || shouldRecalculateImage()) {
                 lastParsedText = text;
@@ -109,7 +112,7 @@ public class TextEffect extends Effect {
                     if (!invert && Color.black.getRGB() != clr) continue;
                     else if (invert && Color.black.getRGB() == clr) continue;
 
-                    Vector v = new Vector((float) image.getWidth() / 2 - x, (float) image.getHeight() / 2 - y, 0).multiply(size);
+                    v = new Vector((float) image.getWidth() / 2 - x, (float) image.getHeight() / 2 - y, 0).multiply(size);
                     VectorUtils.rotateAroundAxisY(v, -location.getYaw() * MathUtils.degreesToRadians);
                     display(particle, location.add(v));
                     location.subtract(v);

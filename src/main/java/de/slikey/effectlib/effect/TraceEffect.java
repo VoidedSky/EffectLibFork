@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import org.bukkit.World;
 import org.bukkit.Location;
-import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 
 import de.slikey.effectlib.Effect;
@@ -14,11 +13,6 @@ import de.slikey.effectlib.EffectManager;
 
 @SuppressWarnings({"unused"})
 public class TraceEffect extends Effect {
-
-    /**
-     * Particle to spawn
-     */
-    public Particle particle = Particle.FLAME;
 
     /**
      * Iterations to wait before refreshing particles
@@ -76,8 +70,9 @@ public class TraceEffect extends Effect {
         if (step % refresh != 0) return;
 
         synchronized(wayPoints) {
+            Location particleLocation;
             for (Vector position : wayPoints) {
-                Location particleLocation = new Location(world, position.getX(), position.getY(), position.getZ());
+                particleLocation = new Location(world, position.getX(), position.getY(), position.getZ());
                 display(particle, particleLocation);
             }
         }

@@ -1,7 +1,8 @@
 # CHANGELOG
 
-# 9.5
+# 10.0
 
+ - Allow using NMS or Bukkit particle names
  - Add some protection against double-disposing of effects and/or effect managers
 
 # 9.4

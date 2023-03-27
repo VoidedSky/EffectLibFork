@@ -4,7 +4,6 @@ import java.io.File;
 import java.awt.image.BufferedImage;
 
 import org.bukkit.Location;
-import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 
 import de.slikey.effectlib.Effect;
@@ -13,11 +12,6 @@ import de.slikey.effectlib.EffectManager;
 import de.slikey.effectlib.effect.ColoredImageEffect;
 
 public abstract class BaseImageEffect extends Effect {
-
-    /**
-     * Particle to draw the image
-     */
-    public Particle particle = Particle.REDSTONE;
 
     /**
      * For configuration-driven files
@@ -119,6 +113,12 @@ public abstract class BaseImageEffect extends Effect {
     }
 
     @Override
+    protected void initialize() {
+        super.initialize();
+        load(fileName);
+    }
+
+    @Override
     public void reset() {
         step = 0;
         rotationStep = 0;
@@ -141,12 +141,10 @@ public abstract class BaseImageEffect extends Effect {
 
     @Override
     public void onRun() {
+        if (images == null && fileName != null) return;
+
         if (images == null && imageLoadCallback != null) return;
 
-        if (images == null && fileName != null) {
-            load(fileName);
-            return;
-        }
         if (images == null || images.length == 0) {
             cancel();
             return;
@@ -156,6 +154,7 @@ public abstract class BaseImageEffect extends Effect {
             step++;
             stepDelay = 0;
         }
+
         stepDelay++;
 
         if (step >= images.length) step = 0;
@@ -163,9 +162,17 @@ public abstract class BaseImageEffect extends Effect {
         BufferedImage image = images[step];
 
         Location location = getLocation();
+        Vector v;
+
+        int pixel;
+        double rotX;
+        double rotY;
+        double rotZ;
+
         for (int y = 0; y < image.getHeight(); y += stepY) {
             for (int x = 0; x < image.getWidth(); x += stepX) {
-                Vector v = new Vector((float) image.getWidth() / 2 - x, (float) image.getHeight() / 2 - y, 0).multiply(size);
+                v = new Vector((float) image.getWidth() / 2 - x, (float) image.getHeight() / 2 - y, 0).multiply(size);
+
                 if (rotation != null) {
                     VectorUtils.rotateVector(v, rotation.getX() * MathUtils.degreesToRadians, rotation.getY() * MathUtils.degreesToRadians, rotation.getZ() * MathUtils.degreesToRadians);
                 }
@@ -174,9 +181,10 @@ public abstract class BaseImageEffect extends Effect {
                 if (orient) VectorUtils.rotateAroundAxisY(v, -location.getYaw() * MathUtils.degreesToRadians);
 
                 if (enableRotation) {
-                    double rotX = 0;
-                    double rotY = 0;
-                    double rotZ = 0;
+                    rotX = 0;
+                    rotY = 0;
+                    rotZ = 0;
+
                     switch (plane) {
                         case X:
                             rotX = angularVelocityX * rotationStep;
@@ -208,7 +216,8 @@ public abstract class BaseImageEffect extends Effect {
                     VectorUtils.rotateVector(v, rotX, rotY, rotZ);
                 }
 
-                int pixel = image.getRGB(x, y);
+                pixel = image.getRGB(x, y);
+
                 if (transparency && (pixel >> 24) == 0) continue;
 
                 display(image, v, location, pixel);

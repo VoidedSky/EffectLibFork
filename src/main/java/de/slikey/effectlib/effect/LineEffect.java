@@ -1,6 +1,5 @@
 package de.slikey.effectlib.effect;
 
-import org.bukkit.Particle;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 import org.bukkit.configuration.ConfigurationSection;
@@ -12,11 +11,6 @@ import de.slikey.effectlib.util.VectorUtils;
 
 @SuppressWarnings({"unused"})
 public class LineEffect extends Effect {
-
-    /**
-     * ParticleType of spawned particle
-     */
-    public Particle particle = Particle.FLAME;
 
     /**
      * Should it do a zig zag?
@@ -116,15 +110,15 @@ public class LineEffect extends Effect {
         }
         Vector link = target.toVector().subtract(location.toVector());
         float length = (float) link.length();
-        if (maxLength > 0) {
-            length = (float)Math.min(length, maxLength);
-        }
+        if (maxLength > 0) length = (float) Math.min(length, maxLength);
+
         link.normalize();
 
         float ratio = length / particles;
         Vector v = link.multiply(ratio);
         Location loc = location.clone().subtract(v);
         Vector rel;
+
         for (int i = 0; i < particles; i++) {
             if (isZigZag) {
                 rel = VectorUtils.rotateVector(zigZagRelativeOffset, loc);

@@ -1,21 +1,21 @@
 package de.slikey.effectlib;
 
 import java.io.File;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.awt.Font;
 import java.util.List;
+import java.util.UUID;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.lang.reflect.Field;
-import java.util.UUID;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;
-import java.util.logging.Logger;
 
 import org.bukkit.Color;
 import org.bukkit.Bukkit;
@@ -26,6 +26,7 @@ import org.bukkit.util.Vector;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.configuration.MemoryConfiguration;
@@ -33,15 +34,14 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import com.google.common.base.CaseFormat;
 
-import de.slikey.effectlib.util.ConfigUtils;
-import de.slikey.effectlib.util.CustomSound;
-import de.slikey.effectlib.util.Disposable;
-import de.slikey.effectlib.util.DynamicLocation;
-import de.slikey.effectlib.util.ImageLoadCallback;
-import de.slikey.effectlib.util.ImageLoadTask;
-import de.slikey.effectlib.util.ParticleDisplay;
-import de.slikey.effectlib.util.ParticleOptions;
+import de.slikey.effectlib.util.*;
 
+/**
+ * Dispose the EffectManager if you don't need it anymore.
+ *
+ * @author Kevin
+ *
+ */
 @SuppressWarnings({"unused"})
 public class EffectManager implements Disposable {
 
@@ -68,10 +68,11 @@ public class EffectManager implements Disposable {
         if (owningPlugin == null) {
             throw new IllegalArgumentException("EffectManager must be given a valid owning plugin");
         }
-        imageCacheFolder = new File(owningPlugin.getDataFolder(), "imagecache");
-        imageCache = new HashMap<>();
         this.owningPlugin = owningPlugin;
         this.logger = logger;
+
+        imageCacheFolder = new File(owningPlugin.getDataFolder(), "imagecache");
+        imageCache = new HashMap<>();
         effects = new HashMap<>();
         disposed = false;
         disposeOnTermination = false;
@@ -280,8 +281,7 @@ public class EffectManager implements Disposable {
     public void done(Effect effect) {
         synchronized (this) {
             removeEffect(effect);
-            if (effect.callback != null && owningPlugin.isEnabled())
-                Bukkit.getScheduler().runTask(owningPlugin, effect.callback);
+            if (effect.callback != null && owningPlugin.isEnabled()) Bukkit.getScheduler().runTask(owningPlugin, effect.callback);
             if (disposeOnTermination && effects != null && effects.isEmpty()) dispose();
         }
     }
@@ -348,13 +348,9 @@ public class EffectManager implements Disposable {
     }
 
     public void onError(String message, Throwable ex) {
-        if (debug) {
-            if (stackTraces) {
-                getLogger().log(Level.WARNING, message, ex);
-            } else {
-                getLogger().log(Level.WARNING, message);
-            }
-        }
+        if (!debug) return;
+        if (stackTraces) getLogger().log(Level.WARNING, message, ex);
+        else getLogger().log(Level.WARNING, message);
     }
 
     public Logger getLogger() {
@@ -397,7 +393,9 @@ public class EffectManager implements Disposable {
                 fieldKey = stringValue;
                 fieldSection = parameterMap;
             }
+
             Field field = effect.getClass().getField(key);
+
             if (field.getType().equals(Integer.TYPE) || field.getType().equals(Integer.class)) {
                 int intValue = Integer.MAX_VALUE;
                 if (!ConfigUtils.isMaxValue(stringValue)) intValue = fieldSection.getInt(fieldKey);
@@ -429,20 +427,19 @@ public class EffectManager implements Disposable {
                 field.set(effect, value);
             } else if (field.getType().equals(Color.class)) {
                 String value = fieldSection.getString(fieldKey);
-                    Integer rgb;
+                int rgb;
                 if (value.equalsIgnoreCase("random")) {
-                    byte red =  (byte)(Math.random() * 255);
-                    byte green =  (byte)(Math.random() * 255);
-                    byte blue  =  (byte)(Math.random() * 255);
+                    byte red = (byte) (Math.random() * 255);
+                    byte green = (byte) (Math.random() * 255);
+                    byte blue = (byte) (Math.random() * 255);
                     rgb = (red << 16) | (green << 8) | blue;
                 } else {
-                        if (value.startsWith("#")) value = value.substring(1);
+                    if (value.startsWith("#")) value = value.substring(1);
                     rgb = Integer.parseInt(value, 16);
                 }
-                Color color = Color.fromRGB(rgb);
-                field.set(effect, color);
+                field.set(effect, Color.fromRGB(rgb));
             } else if (Map.class.isAssignableFrom(field.getType()) && section.isConfigurationSection(key)) {
-                Map<String, Object> map = (Map<String, Object>)field.get(effect);
+                Map<String, Object> map = (Map<String, Object>) field.get(effect);
                 ConfigurationSection subSection = section.getConfigurationSection(key);
                 Set<String> keys = subSection.getKeys(false);
                 for (String mapKey : keys) {
@@ -459,9 +456,9 @@ public class EffectManager implements Disposable {
                     // Note this doesn't handle sections within sections.
                     for (String baseKey : keys) {
                         Object baseValue = baseConfiguration.get(baseKey);
-                        if (baseValue instanceof String && ((String)baseValue).startsWith("$")) {
+                        if (baseValue instanceof String && ((String) baseValue).startsWith("$")) {
                             // If this is an equation it will get parsed when needed
-                            String parameterValue = parameterMap.getString((String)baseValue);
+                            String parameterValue = parameterMap.getString((String) baseValue);
                             baseValue = parameterValue == null ? baseValue : parameterValue;
                         }
                         configSection.set(baseKey, baseValue);
@@ -481,19 +478,19 @@ public class EffectManager implements Disposable {
                 if (!ParticleDisplay.hasColorTransition() && value.equalsIgnoreCase("DUST_COLOR_TRANSITION")) {
                     value = "REDSTONE";
                 }
-                Particle particleValue = Particle.valueOf(value.toUpperCase());
-                field.set(effect, particleValue);
-            } else if (field.getType().isEnum()) {
-                Class<Enum> enumType = (Class<Enum>)field.getType();
+                field.set(effect, ParticleUtil.getParticle(value));
+            } else if (field.getType().equals(BlockData.class)) {
                 String value = fieldSection.getString(fieldKey);
-                Enum enumValue = Enum.valueOf(enumType, value.toUpperCase());
-                field.set(effect, enumValue);
+                field.set(effect, Bukkit.createBlockData(value.toLowerCase()));
+            } else if (field.getType().isEnum()) {
+                Class<Enum> enumType = (Class<Enum>) field.getType();
+                String value = fieldSection.getString(fieldKey);
+                field.set(effect, Enum.valueOf(enumType, value.toUpperCase()));
             } else if (field.getType().equals(Font.class)) {
                 // Should caching the fonts be considered?
                 // Or is the performance gain negligible?
                 String value = fieldSection.getString(fieldKey);
-                Font font = Font.decode(value);
-                field.set(effect, font);
+                field.set(effect, Font.decode(value));
             } else if (field.getType().equals(CustomSound.class)) {
                 String value = fieldSection.getString(fieldKey);
                 field.set(effect, new CustomSound(value));
@@ -504,14 +501,15 @@ public class EffectManager implements Disposable {
 
             return true;
         } catch (Exception ex) {
-            onError("Error assigning EffectLib property " + key + " of class " + effect.getClass().getSimpleName() + " in " + logContext + ": " + ex.getMessage(), ex);
+            onError("Error assigning EffectLib property: '" + key + "' of class: '" + effect.getClass().getSimpleName() + "' in: '" + logContext + "': " + ex.getMessage(), ex);
         }
 
         return false;
     }
 
     public static void disposeAll() {
-        for (Iterator<EffectManager> i = effectManagers.iterator(); i.hasNext();) {
+        Iterator<EffectManager> i = effectManagers.iterator();
+        while (i.hasNext()) {
             EffectManager em = i.next();
             i.remove();
             em.dispose();
@@ -556,10 +554,8 @@ public class EffectManager implements Disposable {
     }
 
     public void ignorePlayer(Player player, boolean ignore) {
-        if (ignore) {
-            ignoredPlayers.add(player.getUniqueId());
-        } else {
-            ignoredPlayers.remove(player.getUniqueId());
-        }
+        if (ignore) ignoredPlayers.add(player.getUniqueId());
+        else ignoredPlayers.remove(player.getUniqueId());
     }
+
 }

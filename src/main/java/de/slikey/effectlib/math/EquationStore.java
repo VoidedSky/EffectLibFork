@@ -5,6 +5,10 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.Collection;
+
+import org.apache.commons.lang3.StringUtils;
 
 @SuppressWarnings({"unused"})
 public class EquationStore {

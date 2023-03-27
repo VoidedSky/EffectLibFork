@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.bukkit.Location;
-import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 
 import de.slikey.effectlib.Effect;
@@ -19,14 +18,11 @@ public class DragonEffect extends Effect {
 
     protected final List<Float> rndF;
     protected final List<Double> rndAngle;
-    /**
-     * ParticleType of spawned particle
-     */
-    public Particle particle = Particle.FLAME;
+
     /**
      * Pitch of the dragon arc
      */
-    public float pitch = .1f;
+    public float pitch = 0.1F;
     /**
      * Arcs to build the breath
      */
@@ -65,22 +61,31 @@ public class DragonEffect extends Effect {
     @Override
     public void onRun() {
         Location location = getLocation();
+
+        float pitch;
+        float x;
+        float y;
+        Vector v;
+
         for (int j = 0; j < stepsPerIteration; j++) {
             if (step % particles == 0) {
                 rndF.clear();
                 rndAngle.clear();
             }
+
             while (rndF.size() < arcs) {
                 rndF.add(RandomUtils.random.nextFloat());
             }
+
             while (rndAngle.size() < arcs) {
                 rndAngle.add(RandomUtils.getRandomAngle());
             }
+
             for (int i = 0; i < arcs; i++) {
-                float pitch = rndF.get(i) * 2 * this.pitch - this.pitch;
-                float x = (step % particles) * length / particles;
-                float y = (float) (pitch * Math.pow(x, 2));
-                Vector v = new Vector(x, y, 0);
+                pitch = rndF.get(i) * 2 * this.pitch - this.pitch;
+                x = (step % particles) * length / particles;
+                y = (float) (pitch * Math.pow(x, 2));
+                v = new Vector(x, y, 0);
                 VectorUtils.rotateAroundAxisX(v, rndAngle.get(i));
                 VectorUtils.rotateAroundAxisZ(v, -location.getPitch() * MathUtils.degreesToRadians);
                 VectorUtils.rotateAroundAxisY(v, -(location.getYaw() + 90) * MathUtils.degreesToRadians);

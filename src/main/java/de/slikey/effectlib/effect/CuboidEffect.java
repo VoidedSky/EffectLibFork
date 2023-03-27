@@ -1,20 +1,14 @@
 package de.slikey.effectlib.effect;
 
 import org.bukkit.Location;
-import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 
 import de.slikey.effectlib.Effect;
-import de.slikey.effectlib.EffectManager;
 import de.slikey.effectlib.EffectType;
+import de.slikey.effectlib.EffectManager;
 
 @SuppressWarnings({"unused"})
 public class CuboidEffect extends Effect {
-
-    /**
-     * Particle of the cube
-     */
-    public Particle particle = Particle.FLAME;
 
     /**
      * Particles in each row
@@ -76,6 +70,7 @@ public class CuboidEffect extends Effect {
         Location target = getTarget();
         Location location = getLocation();
         if (target == null || location == null) return;
+
         if (!initialized) {
             if (blockSnap) {
                 target = target.getBlock().getLocation();
@@ -83,20 +78,17 @@ public class CuboidEffect extends Effect {
             } else {
                 minCorner = location.clone();
             }
+
             if (xLength == 0 && yLength == 0 && zLength == 0) {
                 if (target == null || !target.getWorld().equals(location.getWorld())) {
                     cancel();
                     return;
                 }
-                if (target.getX() < minCorner.getX()) {
-                    minCorner.setX(target.getX());
-                }
-                if (target.getY() < minCorner.getY()) {
-                    minCorner.setY(target.getY());
-                }
-                if (target.getZ() < minCorner.getZ()) {
-                    minCorner.setZ(target.getZ());
-                }
+
+                if (target.getX() < minCorner.getX()) minCorner.setX(target.getX());
+                if (target.getY() < minCorner.getY()) minCorner.setY(target.getY());
+                if (target.getZ() < minCorner.getZ()) minCorner.setZ(target.getZ());
+
                 useXLength = Math.abs(location.getX() - target.getX());
                 useYLength = Math.abs(location.getY() - target.getY());
                 useZLength = Math.abs(location.getZ() - target.getZ());
@@ -105,14 +97,16 @@ public class CuboidEffect extends Effect {
                 useYLength = yLength;
                 useZLength = zLength;
             }
+
             double extra = padding * 2;
             if (blockSnap) extra++;
+
             useXLength += extra;
             useYLength += extra;
             useZLength += extra;
-            if (padding != 0) {
-                minCorner.add(-padding, -padding, -padding);
-            }
+
+            if (padding != 0) minCorner.add(-padding, -padding, -padding);
+
             initialized = true;
         }
         drawOutline();
@@ -142,22 +136,17 @@ public class CuboidEffect extends Effect {
     }
 
     private void drawEdge(Vector v, int i, int dx, int dy, int dz) {
-        if (dx == 0) {
-            v.setX(useXLength * i / particles);
-        } else {
-            v.setX(useXLength * (dx - 1));
-        }
-        if (dy == 0) {
-            v.setY(useYLength * i / particles);
-        } else {
-            v.setY(useYLength * (dy - 1));
-        }
-        if (dz == 0) {
-            v.setZ(useZLength * i / particles);
-        } else {
-            v.setZ(useZLength * (dz - 1));
-        }
+        if (dx == 0) v.setX(useXLength * i / particles);
+        else v.setX(useXLength * (dx - 1));
+
+        if (dy == 0) v.setY(useYLength * i / particles);
+        else v.setY(useYLength * (dy - 1));
+
+        if (dz == 0) v.setZ(useZLength * i / particles);
+        else v.setZ(useZLength * (dz - 1));
+
         display(particle, minCorner.add(v));
         minCorner.subtract(v);
     }
+
 }

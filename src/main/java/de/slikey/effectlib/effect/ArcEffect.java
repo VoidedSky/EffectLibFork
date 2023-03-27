@@ -1,6 +1,5 @@
 package de.slikey.effectlib.effect;
 
-import org.bukkit.Particle;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
@@ -10,11 +9,6 @@ import de.slikey.effectlib.EffectManager;
 
 @SuppressWarnings({"unused"})
 public class ArcEffect extends Effect {
-
-    /**
-     * ParticleType of spawned particle
-     */
-    public Particle particle = Particle.FLAME;
 
     /**
      * Height of the arc in blocks
@@ -57,10 +51,15 @@ public class ArcEffect extends Effect {
         float length = (float) link.length();
         float pitch = (float) (4 * height / Math.pow(length, 2));
 
+        Vector v;
+        float x;
+        float y;
+
         for (int i = 0; i < particles; i++) {
-            Vector v = link.clone().normalize().multiply((float) length * i / particles);
-            float x = ((float) i / particles) * length - length / 2;
-            float y = (float) (-pitch * Math.pow(x, 2) + height);
+            v = link.clone().normalize().multiply(length * i / particles);
+            x = ((float) i / particles) * length - length / 2;
+            y = (float) (-pitch * Math.pow(x, 2) + height);
+
             location.add(v).add(0, y, 0);
             display(particle, location);
             location.subtract(0, y, 0).subtract(v);

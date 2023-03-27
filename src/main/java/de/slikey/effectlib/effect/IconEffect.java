@@ -1,6 +1,5 @@
 package de.slikey.effectlib.effect;
 
-import org.bukkit.Particle;
 import org.bukkit.Location;
 
 import de.slikey.effectlib.Effect;
@@ -9,11 +8,6 @@ import de.slikey.effectlib.EffectManager;
 
 @SuppressWarnings({"unused"})
 public class IconEffect extends Effect {
-
-    /**
-     * ParticleType of spawned particle
-     */
-    public Particle particle = Particle.VILLAGER_ANGRY;
 
     public int yOffset = 2;
 

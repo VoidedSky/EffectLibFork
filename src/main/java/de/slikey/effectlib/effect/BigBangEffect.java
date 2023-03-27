@@ -49,6 +49,9 @@ public class BigBangEffect extends Effect {
 
     @Override
     public void onRun() {
+        Location location = getLocation();
+        Vector v;
+
         if (firework == null) {
             Builder b = FireworkEffect.builder().with(fireworkType);
             b.withColor(color).withColor(color2).withColor(color3);
@@ -56,9 +59,9 @@ public class BigBangEffect extends Effect {
             b.trail(true);
             firework = b.build();
         }
-        Location location = getLocation();
+
         for (int i = 0; i < explosions; i++) {
-            Vector v = RandomUtils.getRandomVector().multiply(radius);
+            v = RandomUtils.getRandomVector().multiply(radius);
             detonate(location, v);
             if (soundInterval != 0 && step % soundInterval == 0) {
                 location.getWorld().playSound(location, sound, soundVolume, soundPitch);
@@ -68,15 +71,15 @@ public class BigBangEffect extends Effect {
     }
 
     protected void detonate(Location location, Vector v) {
-        final Firework fw = (Firework) location.getWorld().spawnEntity(location.add(v), EntityType.FIREWORK);
+        final Firework firework = (Firework) location.getWorld().spawnEntity(location.add(v), EntityType.FIREWORK);
         location.subtract(v);
-        FireworkMeta meta = fw.getFireworkMeta();
+        FireworkMeta meta = firework.getFireworkMeta();
         meta.setPower(0);
         for (int i = 0; i < intensity; i++) {
-            meta.addEffect(firework);
+            meta.addEffect(this.firework);
         }
-        fw.setFireworkMeta(meta);
-        fw.detonate();
+        firework.setFireworkMeta(meta);
+        firework.detonate();
     }
 
 }

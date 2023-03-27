@@ -24,7 +24,7 @@ public class ExplodeEffect extends Effect {
     public ExplodeEffect(EffectManager effectManager) {
         super(effectManager);
         type = EffectType.INSTANT;
-        speed = 0.5f;
+        speed = 0.5F;
     }
 
     @Override

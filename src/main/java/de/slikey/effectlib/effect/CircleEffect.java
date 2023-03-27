@@ -1,6 +1,5 @@
 package de.slikey.effectlib.effect;
 
-import org.bukkit.Particle;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
@@ -18,35 +17,30 @@ public class CircleEffect extends Effect {
      */
     public boolean orient = false;
 
-    /*
-     * ParticleType of spawned particle
-     */
-    public Particle particle = Particle.VILLAGER_HAPPY;
-
-    /*
+    /**
      * Rotation of the torus.
      */
     public double xRotation, yRotation, zRotation = 0;
 
-    /*
+    /**
      * Turns the circle by this angle each iteration around the x-axis
      */
     public double angularVelocityX = Math.PI / 200;
 
-    /*
+    /**
      * Turns the circle by this angle each iteration around the y-axis
      */
     public double angularVelocityY = Math.PI / 170;
 
-    /*
+    /**
      * Turns the circle by this angle each iteration around the z-axis
      */
     public double angularVelocityZ = Math.PI / 155;
 
-    /*
+    /**
      * Radius of circle above head
      */
-    public float radius = .4f;
+    public float radius = 0.4F;
 
     /**
      * Used to make a partial circle
@@ -59,22 +53,22 @@ public class CircleEffect extends Effect {
      */
     public boolean resetCircle = false;
 
-    /*
+    /**
      * Current step. Works as a counter
      */
     protected float step = 0;
 
-    /*
+    /**
      * Subtracts from location if needed
      */
     public double xSubtract, ySubtract, zSubtract;
 
-    /*
+    /**
      * Should it rotate?
      */
     public boolean enableRotation = true;
 
-    /*
+    /**
      * Amount of particles per circle
      */
     public int particles = 20;
@@ -103,26 +97,31 @@ public class CircleEffect extends Effect {
         double inc = maxAngle / particles;
         int steps = wholeCircle ? particles : 1;
 
+        double angle;
+        Vector v;
+
         for (int i = 0; i < steps; i++) {
-            double angle = step * inc;
-            Vector v = new Vector();
+            angle = step * inc;
+            v = new Vector();
+
             v.setX(Math.cos(angle) * radius);
             v.setZ(Math.sin(angle) * radius);
+
             VectorUtils.rotateVector(v, xRotation, yRotation, zRotation);
             VectorUtils.rotateAroundAxisX(v, location.getPitch() * MathUtils.degreesToRadians);
             VectorUtils.rotateAroundAxisY(v, -location.getYaw() * MathUtils.degreesToRadians);
+
             if (enableRotation) {
                 VectorUtils.rotateVector(v, angularVelocityX * step, angularVelocityY * step, angularVelocityZ * step);
             }
-            if (orient) {
-                v = VectorUtils.rotateVector(v, location);
-            }
+
+            if (orient) v = VectorUtils.rotateVector(v, location);
+
             display(particle, location.clone().add(v));
             step++;
         }
-        if (resetCircle) {
-            step = 0;
-        }
+
+        if (resetCircle) step = 0;
     }
 
 }

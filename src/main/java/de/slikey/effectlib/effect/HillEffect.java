@@ -1,7 +1,6 @@
 package de.slikey.effectlib.effect;
 
 import org.bukkit.Location;
-import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 
 import de.slikey.effectlib.Effect;
@@ -17,14 +16,9 @@ import de.slikey.effectlib.util.VectorUtils;
 public class HillEffect extends Effect {
 
     /**
-     * ParticleType of spawned particle
-     */
-    public Particle particle = Particle.FLAME;
-
-    /**
      * Height of the hill in blocks
      */
-    public float height = 2.5f;
+    public float height = 2.5F;
 
     /**
      * Amount of particles per row
@@ -34,7 +28,7 @@ public class HillEffect extends Effect {
     /**
      * Length of the edge
      */
-    public float edgeLength = 6.5f;
+    public float edgeLength = 6.5F;
 
     /**
      * Rotation of the Hill
@@ -52,10 +46,14 @@ public class HillEffect extends Effect {
     public void onRun() {
         Location location = getLocation();
         Vector v = new Vector();
+
+        double y1;
+        double y2;
+
         for (int x = 0; x <= particles; x++) {
-            double y1 = Math.sin(Math.PI * x / particles);
+            y1 = Math.sin(Math.PI * x / particles);
             for (int z = 0; z <= particles; z++) {
-                double y2 = Math.sin(Math.PI * z / particles);
+                y2 = Math.sin(Math.PI * z / particles);
                 v.setX(edgeLength * x / particles).setZ(edgeLength * z / particles);
                 v.setY(height * y1 * y2);
                 VectorUtils.rotateAroundAxisY(v, yRotation);

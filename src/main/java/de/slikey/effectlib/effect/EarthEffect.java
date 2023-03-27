@@ -48,7 +48,7 @@ public class EarthEffect extends Effect {
     /**
      * Height of the mountains.
      */
-    public float mountainHeight = .5f;
+    public float mountainHeight = 0.5F;
 
     /**
      * Triggers invalidation on first run
@@ -82,30 +82,37 @@ public class EarthEffect extends Effect {
         Set<Vector> cache = new HashSet<>();
         int sqrtParticles = (int) Math.sqrt(particles);
         float theta = 0, phi, thetaStep = MathUtils.PI / sqrtParticles, phiStep = MathUtils.PI2 / sqrtParticles;
+
+        float x;
+        float y;
+        float z;
+
         for (int i = 0; i < sqrtParticles; i++) {
             theta += thetaStep;
             phi = 0;
             for (int j = 0; j < sqrtParticles; j++) {
                 phi += phiStep;
-                float x = radius * MathUtils.sin(theta) * MathUtils.cos(phi);
-                float y = radius * MathUtils.sin(theta) * MathUtils.sin(phi);
-                float z = radius * MathUtils.cos(theta);
+                x = radius * MathUtils.sin(theta) * MathUtils.cos(phi);
+                y = radius * MathUtils.sin(theta) * MathUtils.sin(phi);
+                z = radius * MathUtils.cos(theta);
                 cache.add(new Vector(x, y, z));
             }
         }
 
         float increase = mountainHeight / precision;
+        double r1;
+        double r2;
+        double r3;
+
         for (int i = 0; i < precision; i++) {
-            double r1 = RandomUtils.getRandomAngle(), r2 = RandomUtils.getRandomAngle(), r3 = RandomUtils.getRandomAngle();
+            r1 = RandomUtils.getRandomAngle();
+            r2 = RandomUtils.getRandomAngle();
+            r3 = RandomUtils.getRandomAngle();
             for (Vector v : cache) {
-                if (v.getY() > 0) {
-                    v.setY(v.getY() + increase);
-                } else {
-                    v.setY(v.getY() - increase);
-                }
-                if (i != precision - 1) {
-                    VectorUtils.rotateVector(v, r1, r2, r3);
-                }
+                if (v.getY() > 0) v.setY(v.getY() + increase);
+                else v.setY(v.getY() - increase);
+
+                if (i != precision - 1) VectorUtils.rotateVector(v, r1, r2, r3);
             }
         }
 

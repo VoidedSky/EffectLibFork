@@ -1,7 +1,6 @@
 package de.slikey.effectlib.effect;
 
 import org.bukkit.Location;
-import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 
 import de.slikey.effectlib.Effect;
@@ -13,11 +12,6 @@ import de.slikey.effectlib.math.EquationTransform;
 
 @SuppressWarnings({"unused"})
 public class EquationEffect extends Effect {
-
-    /**
-     * ParticleType of spawned particle
-     */
-    public Particle particle = Particle.REDSTONE;
 
     /**
      * Equations defining the X,Y,Z coordinates over
@@ -126,29 +120,44 @@ public class EquationEffect extends Effect {
         Location location = getLocation();
 
         boolean hasInnerEquation = (x2Transform != null && y2Transform != null && z2Transform != null);
+
+        double xValue;
+        double yValue;
+        double zValue;
+
+        Vector result;
+        Location targetLocation;
+
+        double x2Value;
+        double y2Value;
+        double z2Value;
+
+        Vector result2;
+
+        Location target2Location;
+
         for (int i = 0; i < particles; i++) {
-            double xValue = xTransform.get(step);
-            double yValue = yTransform.get(step);
-            double zValue = zTransform.get(step);
+            xValue = xTransform.get(step);
+            yValue = yTransform.get(step);
+            zValue = zTransform.get(step);
             
-            Vector result = new Vector(xValue, yValue, zValue);
+            result = new Vector(xValue, yValue, zValue);
             if (orient && orientPitch) result = VectorUtils.rotateVector(result, location);
             else if (orient) result = VectorUtils.rotateVector(result, location.getYaw(), 0);
 
-            Location targetLocation = location.clone();
-            targetLocation.add(result);
+            targetLocation = location.clone().add(result);
 
             if (hasInnerEquation) {
                 for (int j = 0; j < particles2; j++) {
-                    double x2Value = x2Transform.get(step, miniStep);
-                    double y2Value = y2Transform.get(step, miniStep);
-                    double z2Value = z2Transform.get(step, miniStep);
+                    x2Value = x2Transform.get(step, miniStep);
+                    y2Value = y2Transform.get(step, miniStep);
+                    z2Value = z2Transform.get(step, miniStep);
 
-                    Vector result2 = new Vector(x2Value, y2Value, z2Value);
+                    result2 = new Vector(x2Value, y2Value, z2Value);
                     if (orient && orientPitch) result2 = VectorUtils.rotateVector(result2, location);
                     else if (orient) result2 = VectorUtils.rotateVector(result2, location.getYaw(), 0);
 
-                    Location target2Location = targetLocation.clone().add(result2);
+                    target2Location = targetLocation.clone().add(result2);
                     display(particle, target2Location);
 
                     miniStep++;

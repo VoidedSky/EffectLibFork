@@ -11,9 +11,9 @@ import de.slikey.effectlib.EffectManager;
 public class JumpEffect extends Effect {
 
     /**
-     * Power of jump. (0.5f)
+     * Power of jump. (0.5F)
      */
-    public float power = .5f;
+    public float power = 0.5F;
 
     public JumpEffect(EffectManager effectManager) {
         super(effectManager);

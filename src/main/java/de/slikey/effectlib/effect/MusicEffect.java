@@ -1,6 +1,5 @@
 package de.slikey.effectlib.effect;
 
-import org.bukkit.Particle;
 import org.bukkit.Location;
 
 import de.slikey.effectlib.Effect;
@@ -10,8 +9,6 @@ import de.slikey.effectlib.EffectManager;
 @SuppressWarnings({"unused"})
 public class MusicEffect extends Effect {
 
-    public Particle particle = Particle.NOTE;
-
     /**
      * Radials to spawn next note.
      */
@@ -20,7 +17,7 @@ public class MusicEffect extends Effect {
     /**
      * Radius of circle above head
      */
-    public float radius = .4f;
+    public float radius = 0.4F;
 
     /**
      * Current step. Works as a counter
@@ -42,7 +39,7 @@ public class MusicEffect extends Effect {
     @Override
     public void onRun() {
         Location location = getLocation();
-        location.add(0, 1.9f, 0);
+        location.add(0, 1.9F, 0);
         location.add(Math.cos(radialsPerStep * step) * radius, 0, Math.sin(radialsPerStep * step) * radius);
 
         display(particle, location);

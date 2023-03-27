@@ -13,7 +13,7 @@ public class TurnEffect extends Effect {
     /**
      * Angular movement per iteration
      */
-    public float step = 11.25f;
+    public float step = 11.25F;
 
     public TurnEffect(EffectManager effectManager) {
         super(effectManager);

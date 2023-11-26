@@ -1,5 +1,6 @@
 package de.slikey.effectlib.effect;
 
+import org.bukkit.Particle;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
@@ -32,6 +33,7 @@ public class ShieldEffect extends Effect {
     public ShieldEffect(EffectManager effectManager) {
         super(effectManager);
         type = EffectType.REPEATING;
+        particle = Particle.FLAME;
         iterations = 500;
         period = 1;
     }
@@ -40,6 +42,12 @@ public class ShieldEffect extends Effect {
     public void onRun() {
         Location location = getLocation();
         Vector v;
+
+        if (location == null) {
+            cancel();
+            return;
+        }
+
         for (int i = 0; i < particles; i++) {
             v = RandomUtils.getRandomVector().multiply(radius);
             if (!sphere) {

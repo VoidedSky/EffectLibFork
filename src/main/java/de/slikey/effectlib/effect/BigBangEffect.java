@@ -52,6 +52,11 @@ public class BigBangEffect extends Effect {
         Location location = getLocation();
         Vector v;
 
+        if (location == null || location.getWorld() == null) {
+            cancel();
+            return;
+        }
+
         if (firework == null) {
             Builder b = FireworkEffect.builder().with(fireworkType);
             b.withColor(color).withColor(color2).withColor(color3);
@@ -71,15 +76,17 @@ public class BigBangEffect extends Effect {
     }
 
     protected void detonate(Location location, Vector v) {
-        final Firework firework = (Firework) location.getWorld().spawnEntity(location.add(v), EntityType.FIREWORK);
-        location.subtract(v);
-        FireworkMeta meta = firework.getFireworkMeta();
-        meta.setPower(0);
-        for (int i = 0; i < intensity; i++) {
-            meta.addEffect(this.firework);
+        if (location != null && location.getWorld() != null) {
+            final Firework firework = (Firework) location.getWorld().spawnEntity(location.add(v), EntityType.FIREWORK);
+            location.subtract(v);
+            FireworkMeta meta = firework.getFireworkMeta();
+            meta.setPower(0);
+            for (int i = 0; i < intensity; i++) {
+                meta.addEffect(this.firework);
+            }
+            firework.setFireworkMeta(meta);
+            firework.detonate();
         }
-        firework.setFireworkMeta(meta);
-        firework.detonate();
     }
 
 }

@@ -1,5 +1,6 @@
 package de.slikey.effectlib.effect;
 
+import org.bukkit.Particle;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
@@ -56,6 +57,7 @@ public class AnimatedBallEffect extends Effect {
     public AnimatedBallEffect(EffectManager effectManager) {
         super(effectManager);
         type = EffectType.REPEATING;
+        particle = Particle.SPELL_WITCH;
         iterations = 500;
         period = 1;
     }
@@ -69,6 +71,11 @@ public class AnimatedBallEffect extends Effect {
     public void onRun() {
         Vector vector = new Vector();
         Location location = getLocation();
+
+        if (location == null) {
+            cancel();
+            return;
+        }
 
         float t;
         float r;

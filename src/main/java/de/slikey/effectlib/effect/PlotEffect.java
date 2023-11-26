@@ -4,6 +4,7 @@ import java.util.Set;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import org.bukkit.Particle;
 import org.bukkit.Location;
 
 import de.slikey.effectlib.Effect;
@@ -58,6 +59,7 @@ public class PlotEffect extends Effect {
     public PlotEffect(EffectManager effectManager) {
         super(effectManager);
         type = EffectType.REPEATING;
+        particle = Particle.REDSTONE;
         period = 1;
         iterations = 100;
     }
@@ -67,6 +69,12 @@ public class PlotEffect extends Effect {
         int base = persistent ? 0 : step;
 
         Location location;
+
+        if (getLocation() == null) {
+            cancel();
+            return;
+        }
+
         double xOffset;
         double yOffset;
         double zOffset;

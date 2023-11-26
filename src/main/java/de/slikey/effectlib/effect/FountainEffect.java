@@ -1,6 +1,7 @@
 package de.slikey.effectlib.effect;
 
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 
 import de.slikey.effectlib.Effect;
@@ -54,6 +55,7 @@ public class FountainEffect extends Effect {
     public FountainEffect(EffectManager effectManager) {
         super(effectManager);
         type = EffectType.REPEATING;
+        particle = Particle.WATER_SPLASH;
         period = 2;
         iterations = 100;
     }
@@ -61,6 +63,11 @@ public class FountainEffect extends Effect {
     @Override
     public void onRun() {
         Location location = getLocation();
+
+        if (location == null) {
+            cancel();
+            return;
+        }
 
         double angle;
         float ratio;

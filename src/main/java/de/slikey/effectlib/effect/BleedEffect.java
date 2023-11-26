@@ -38,6 +38,12 @@ public class BleedEffect extends de.slikey.effectlib.Effect {
     public void onRun() {
         // Location to spawn the blood-item.
         Location location = getLocation();
+
+        if (location == null || location.getWorld() == null) {
+            cancel();
+            return;
+        }
+
         location.add(0, RandomUtils.random.nextFloat() * height, 0);
         location.getWorld().playEffect(location, org.bukkit.Effect.STEP_SOUND, material);
 

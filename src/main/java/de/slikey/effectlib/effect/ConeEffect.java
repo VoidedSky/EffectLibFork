@@ -1,5 +1,6 @@
 package de.slikey.effectlib.effect;
 
+import org.bukkit.Particle;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
@@ -56,6 +57,7 @@ public class ConeEffect extends Effect {
     public ConeEffect(EffectManager effectManager) {
         super(effectManager);
         type = EffectType.REPEATING;
+        particle = Particle.FLAME;
         period = 1;
         iterations = 200;
     }
@@ -68,6 +70,11 @@ public class ConeEffect extends Effect {
     @Override
     public void onRun() {
         Location location = getLocation();
+
+        if (location == null) {
+            cancel();
+            return;
+        }
 
         double angle;
         float radius;

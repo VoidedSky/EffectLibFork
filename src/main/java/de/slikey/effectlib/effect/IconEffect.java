@@ -1,5 +1,6 @@
 package de.slikey.effectlib.effect;
 
+import org.bukkit.Particle;
 import org.bukkit.Location;
 
 import de.slikey.effectlib.Effect;
@@ -14,6 +15,7 @@ public class IconEffect extends Effect {
     public IconEffect(EffectManager effectManager) {
         super(effectManager);
         type = EffectType.REPEATING;
+        particle = Particle.VILLAGER_ANGRY;
         period = 4;
         iterations = 25;
     }
@@ -21,6 +23,12 @@ public class IconEffect extends Effect {
     @Override
     public void onRun() {
         Location location = getLocation();
+
+        if (location == null) {
+            cancel();
+            return;
+        }
+
         location.add(0, yOffset, 0);
         display(particle, location);
     }

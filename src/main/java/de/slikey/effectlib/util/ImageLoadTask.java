@@ -94,7 +94,7 @@ public class ImageLoadTask implements Runnable {
                 reader.setInput(in);
                 int numImages = reader.getNumImages(true);
                 images = new BufferedImage[numImages];
-                for (int i = 0, count = numImages; i < count; i++) {
+                for (int i = 0; i < numImages; i++) {
                     images[i] = reader.read(i);
                 }
             } else {

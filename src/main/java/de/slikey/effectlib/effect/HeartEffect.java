@@ -49,12 +49,18 @@ public class HeartEffect extends Effect {
 
     public HeartEffect(EffectManager effectManager) {
         super(effectManager);
+        particle = Particle.CRIT_MAGIC;
     }
 
     @Override
     public void onRun() {
         Location location = getLocation();
         Vector vector = new Vector();
+
+        if (location == null) {
+            cancel();
+            return;
+        }
 
         float alpha;
         double phi;

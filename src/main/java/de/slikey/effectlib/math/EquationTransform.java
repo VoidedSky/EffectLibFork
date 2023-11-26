@@ -1,6 +1,7 @@
 package de.slikey.effectlib.math;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Random;
@@ -46,9 +47,7 @@ public class EquationTransform implements Transform, VariableProvider {
 
     public EquationTransform(String equation, String... inputVariables) {
         this.inputVariables = new ArrayList<>();
-        for (String inputVariable : inputVariables) {
-            this.inputVariables.add(inputVariable);
-        }
+        this.inputVariables.addAll(Arrays.asList(inputVariables));
         setEquation(equation);
     }
 
@@ -60,7 +59,7 @@ public class EquationTransform implements Transform, VariableProvider {
     private void checkCustomFunctions() {
         if (randFunction == null) {
             randFunction = new Function("rand", 2) {
-                private Random random = new Random();
+                private final Random random = new Random();
 
                 @Override
                 public double apply(double... args) {
@@ -70,7 +69,7 @@ public class EquationTransform implements Transform, VariableProvider {
         }
         if (probabilityFunction == null) {
             probabilityFunction = new Function("prob", 3) {
-                private Random random = new Random();
+                private final Random random = new Random();
 
                 @Override
                 public double apply(double... args) {
@@ -128,11 +127,11 @@ public class EquationTransform implements Transform, VariableProvider {
     }
 
     @Override
-    public synchronized double get(double t) {
+    public synchronized double get(double input) {
         if (expression == null) return 0;
 
         for (String inputVariable : inputVariables) {
-            expression.setVariable(inputVariable, t);
+            expression.setVariable(inputVariable, input);
         }
         return get();
     }

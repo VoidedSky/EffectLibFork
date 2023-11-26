@@ -10,8 +10,8 @@ public class EchoTransform implements Transform {
     }
 
     @Override
-    public double get(double t) {
-        return t;
+    public double get(double input) {
+        return input;
     }
 
 }

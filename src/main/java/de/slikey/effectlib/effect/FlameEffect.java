@@ -1,6 +1,7 @@
 package de.slikey.effectlib.effect;
 
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 
 import de.slikey.effectlib.Effect;
@@ -16,6 +17,7 @@ public class FlameEffect extends Effect {
     public FlameEffect(EffectManager effectManager) {
         super(effectManager);
         type = EffectType.REPEATING;
+        particle = Particle.FLAME;
         period = 1;
         iterations = 600;
     }
@@ -24,6 +26,12 @@ public class FlameEffect extends Effect {
     public void onRun() {
         Location location = getLocation();
         Vector v;
+
+        if (location == null) {
+            cancel();
+            return;
+        }
+
         for (int i = 0; i < particles; i++) {
             v = RandomUtils.getRandomCircleVector().multiply(RandomUtils.random.nextDouble() * 0.6D);
             v.setY(RandomUtils.random.nextFloat() * 1.8);

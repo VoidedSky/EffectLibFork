@@ -10,10 +10,9 @@ import org.bukkit.Vibration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import de.slikey.effectlib.util.ParticleDisplay;
 import de.slikey.effectlib.util.ParticleOptions;
 
-public class ParticleDisplay_19 extends ParticleDisplay {
+public class ParticleDisplay_19 extends ParticleDisplay_17 {
 
 	@Override
 	public void display(Particle particle, ParticleOptions options, Location center, double range, List<Player> targetPlayers) {

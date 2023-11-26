@@ -1,6 +1,7 @@
 package de.slikey.effectlib.effect;
 
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 
 import de.slikey.effectlib.Effect;
@@ -38,6 +39,7 @@ public class HillEffect extends Effect {
     public HillEffect(EffectManager effectManager) {
         super(effectManager);
         type = EffectType.REPEATING;
+        particle = Particle.FLAME;
         period = 10;
         iterations = 20;
     }
@@ -46,6 +48,11 @@ public class HillEffect extends Effect {
     public void onRun() {
         Location location = getLocation();
         Vector v = new Vector();
+
+        if (location == null) {
+            cancel();
+            return;
+        }
 
         double y1;
         double y2;

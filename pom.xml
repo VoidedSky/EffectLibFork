@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.elmakers.mine.bukkit</groupId>
 	<artifactId>EffectLib</artifactId>
-	<version>10.0</version>
+	<version>10.2-SNAPSHOT</version>
 
 	<name>EffectLib</name>
 	<description>A library for Bukkit plugins to make complicated particle effects</description>
@@ -21,6 +21,9 @@
 			<email>nathan@elmakers.com</email>
 			<organization>elMakers</organization>
 			<organizationUrl>http://www.elmakers.com</organizationUrl>
+		</developer>
+		<developer>
+			<name>PikaMug</name>
 		</developer>
 		<developer>
 			<name>Chronoken</name>
@@ -145,7 +148,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<configuration>
-					<additionalparam>-Xdoclint:none</additionalparam>
 					<additionalJOption>-Xdoclint:none</additionalJOption>
 				</configuration>
 				<version>3.5.0</version>

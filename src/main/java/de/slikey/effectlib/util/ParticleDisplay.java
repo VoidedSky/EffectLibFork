@@ -51,20 +51,10 @@ public abstract class ParticleDisplay {
     }
 
     protected void displayFakeBlock(final Player player, Location center, ParticleOptions options) {
-        if (options.blockData == null) return;
-        if (!center.getBlock().isPassable() && !center.getBlock().isEmpty()) return;
-
-        final Location b = center.getBlock().getLocation().clone();
-        player.sendBlockChange(b, options.blockData);
-
-        Bukkit.getScheduler().runTaskLaterAsynchronously(manager.getOwningPlugin(), new Runnable() {
-            @Override
-            public void run() {
-                player.sendBlockChange(b, b.getBlock().getBlockData());
-            }
-        }, options.blockDuration);
+        // Implemented in 1.13+
     }
 
+    @SuppressWarnings({"deprecation"})
     protected void displayItem(Particle particle, ParticleOptions options, Location center, double range, List<Player> targetPlayers) {
         Material material = options.material;
         if (material == null || material.isAir()) return;

@@ -1,6 +1,7 @@
 package de.slikey.effectlib.effect;
 
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 
 import de.slikey.effectlib.Effect;
@@ -46,6 +47,7 @@ public class VortexEffect extends Effect {
     public VortexEffect(EffectManager effectManager) {
         super(effectManager);
         type = EffectType.REPEATING;
+        particle = Particle.FLAME;
         period = 1;
         iterations = 200;
     }
@@ -60,6 +62,11 @@ public class VortexEffect extends Effect {
         Location location = getLocation();
         double angle;
         Vector v;
+
+        if (location == null) {
+            cancel();
+            return;
+        }
 
         for (int x = 0; x < circles; x++) {
             for (int i = 0; i < helixes; i++) {

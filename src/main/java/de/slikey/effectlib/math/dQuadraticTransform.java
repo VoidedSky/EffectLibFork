@@ -21,12 +21,12 @@ public class dQuadraticTransform implements Transform {
      * For a quadratic function:
      * f(x) = a(x+b)^2 + c(x+b) + d
      * f'(x) = 2a(x+b) + c
-     * @param t
-     * @return
+     * @param input a specific step
+     * @return the derivative, or velocity, of a quadratic equation
      */
     @Override
-    public double get(double t) {
-        return  2 * a.get(t) * (t + b.get(t)) + c.get(t);
+    public double get(double input) {
+        return  2 * a.get(input) * (input + b.get(input)) + c.get(input);
     }
 
 }

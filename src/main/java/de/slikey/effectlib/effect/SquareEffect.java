@@ -1,5 +1,6 @@
 package de.slikey.effectlib.effect;
 
+import org.bukkit.Particle;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
@@ -11,24 +12,35 @@ import de.slikey.effectlib.util.RandomUtils;
 @SuppressWarnings({"unused"})
 public class SquareEffect extends Effect {
 
-	// Radius of the square
+	/**
+	 * Radius of the square
+	 */
 	public double radius = 0.6;
 
-	// y-offset of the square
+	/**
+	 * y-offset of the square
+	 */
 	public double yOffset = 0;
 
-	// Amount of particles to display
+	/**
+	 * Amount of particles to display
+	 */
 	public int particles = 50;
 
-	// Amount to increase the radius per tick
+	/**
+	 * Amount to increase the radius per tick
+	 */
 	public double radiusIncrease = 0;
 
-	// Amount to increase the particles per tick
+	/**
+	 * Amount to increase the particles per tick
+	 */
 	public int particleIncrease = 0;
 
 	public SquareEffect(EffectManager effectManager) {
 		super(effectManager);
 		type = EffectType.REPEATING;
+		particle = Particle.SPELL_MOB;
 		iterations = 500;
 		period = 1;
 	}
@@ -39,6 +51,12 @@ public class SquareEffect extends Effect {
 		if (particleIncrease != 0) particles += particleIncrease;
 
 		Location location = getLocation();
+
+		if (location == null) {
+			cancel();
+			return;
+		}
+
 		location.add(0, yOffset, 0);
 		Vector v;
 

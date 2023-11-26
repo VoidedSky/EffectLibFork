@@ -1,5 +1,6 @@
 package de.slikey.effectlib.effect;
 
+import org.bukkit.Particle;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
@@ -37,6 +38,7 @@ public class SphereEffect extends Effect {
     public SphereEffect(EffectManager effectManager) {
         super(effectManager);
         type = EffectType.REPEATING;
+        particle = Particle.SPELL_MOB;
         iterations = 500;
         period = 1;
     }
@@ -47,6 +49,12 @@ public class SphereEffect extends Effect {
         if (particleIncrease != 0) particles += particleIncrease;
 
         Location location = getLocation();
+
+        if (location == null) {
+            cancel();
+            return;
+        }
+
         location.add(0, yOffset, 0);
         Vector v;
 

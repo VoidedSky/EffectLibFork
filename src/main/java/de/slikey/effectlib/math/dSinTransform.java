@@ -21,13 +21,13 @@ public class dSinTransform implements Transform {
      * For a sin function:
      * f(x) = a*sin(b(x+c)) + d
      * f'(x) = a*b*cos(b(x+c))
-     * @param t
-     * @return
+     * @param input a specific step
+     * @return the derivative, or velocity, of a sin equation
      */
     @Override
-    public double get(double t) {
-        double bValue = b.get(t);
-        return a.get(t) * bValue * Math.cos(bValue * (t + c.get(t)));
+    public double get(double input) {
+        double bValue = b.get(input);
+        return a.get(input) * bValue * Math.cos(bValue * (input + c.get(input)));
     }
 
 }

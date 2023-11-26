@@ -1,5 +1,6 @@
 package de.slikey.effectlib.effect;
 
+import org.bukkit.Particle;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
@@ -28,6 +29,7 @@ public class ArcEffect extends Effect {
     public ArcEffect(EffectManager effectManager) {
         super(effectManager);
         type = EffectType.REPEATING;
+        particle = Particle.FLAME;
         period = 1;
         iterations = 200;
     }
@@ -43,6 +45,11 @@ public class ArcEffect extends Effect {
         Location target = getTarget();
 
         if (target == null) {
+            cancel();
+            return;
+        }
+
+        if (location == null) {
             cancel();
             return;
         }

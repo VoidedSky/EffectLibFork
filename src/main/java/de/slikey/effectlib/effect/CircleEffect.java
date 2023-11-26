@@ -1,5 +1,6 @@
 package de.slikey.effectlib.effect;
 
+import org.bukkit.Particle;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
@@ -81,6 +82,7 @@ public class CircleEffect extends Effect {
     public CircleEffect(EffectManager effectManager) {
         super(effectManager);
         type = EffectType.REPEATING;
+        particle = Particle.VILLAGER_HAPPY;
         period = 2;
         iterations = 50;
     }
@@ -93,6 +95,12 @@ public class CircleEffect extends Effect {
     @Override
     public void onRun() {
         Location location = getLocation();
+
+        if (location == null) {
+            cancel();
+            return;
+        }
+
         location.subtract(xSubtract, ySubtract, zSubtract);
         double inc = maxAngle / particles;
         int steps = wholeCircle ? particles : 1;

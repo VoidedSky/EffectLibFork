@@ -30,6 +30,12 @@ public class ExplodeEffect extends Effect {
     @Override
     public void onRun() {
         Location location = getLocation();
+
+        if (location == null || location.getWorld() == null) {
+            cancel();
+            return;
+        }
+
         location.getWorld().playSound(location, sound, 4.0F, (1.0F + (RandomUtils.random.nextFloat() - RandomUtils.random.nextFloat()) * 0.2F) * 0.7F);
         display(particle1, location);
         display(particle2, location);

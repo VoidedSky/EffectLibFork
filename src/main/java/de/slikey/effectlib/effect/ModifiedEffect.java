@@ -136,11 +136,11 @@ public class ModifiedEffect extends Effect {
                 return;
             }
 
-            innerEffect.material = material;
-            innerEffect.materialData = materialData;
+            innerEffect.setMaterial(material);
+            innerEffect.setMaterialData(materialData);
 
-            innerEffect.blockData = blockData;
-            innerEffect.blockDuration = blockDuration;
+            innerEffect.setBlockData(blockData);
+            innerEffect.setBlockDuration(blockDuration);
 
             String equation;
             String fieldName;
@@ -171,7 +171,6 @@ public class ModifiedEffect extends Effect {
                     parameterTransforms.put(field, transform);
                 } catch (Exception ex2) {
                     effectManager.onError("Error binding to field: '" + fieldName + "' of effect class: '" + effectClass + "'", ex2);
-                    continue;
                 }
             }
 
@@ -198,6 +197,12 @@ public class ModifiedEffect extends Effect {
             else previousOffset = new Vector();
 
             Location location = getLocation();
+
+            if (location == null) {
+                cancel();
+                return;
+            }
+
             if (orient && orientPitch) offset = VectorUtils.rotateVector(offset, location);
             else if (orient) offset = VectorUtils.rotateVector(offset, location.getYaw(), 0);
 

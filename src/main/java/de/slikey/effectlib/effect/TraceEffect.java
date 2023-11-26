@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import org.bukkit.World;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 
 import de.slikey.effectlib.Effect;
@@ -42,6 +43,7 @@ public class TraceEffect extends Effect {
     public TraceEffect(EffectManager effectManager) {
         super(effectManager);
         type = EffectType.REPEATING;
+        particle = Particle.FLAME;
         period = 1;
         iterations = 600;
     }
@@ -54,6 +56,12 @@ public class TraceEffect extends Effect {
     @Override
     public void onRun() {
         Location location = getLocation();
+
+        if (location == null) {
+            cancel();
+            return;
+        }
+
         if (world == null) {
             world = location.getWorld();
         } else if (!location.getWorld().equals(world)) {

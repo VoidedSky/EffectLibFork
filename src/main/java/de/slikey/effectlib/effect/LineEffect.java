@@ -1,5 +1,6 @@
 package de.slikey.effectlib.effect;
 
+import org.bukkit.Particle;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 import org.bukkit.configuration.ConfigurationSection;
@@ -82,6 +83,7 @@ public class LineEffect extends Effect {
     public LineEffect(EffectManager effectManager) {
         super(effectManager);
         type = EffectType.REPEATING;
+        particle = Particle.FLAME;
         period = 1;
         iterations = 1;
     }
@@ -99,6 +101,11 @@ public class LineEffect extends Effect {
     public void onRun() {
         Location location = getLocation();
         Location target;
+
+        if (location == null) {
+            cancel();
+            return;
+        }
 
         if (length > 0) target = location.clone().add(location.getDirection().normalize().multiply(length));
         else target = getTarget();

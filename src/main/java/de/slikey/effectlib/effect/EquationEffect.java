@@ -1,6 +1,7 @@
 package de.slikey.effectlib.effect;
 
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 
 import de.slikey.effectlib.Effect;
@@ -94,6 +95,7 @@ public class EquationEffect extends Effect {
     public EquationEffect(EffectManager effectManager) {
         super(effectManager);
         type = EffectType.REPEATING;
+        particle = Particle.REDSTONE;
         period = 1;
         iterations = 100;
     }
@@ -106,6 +108,13 @@ public class EquationEffect extends Effect {
 
     @Override
     public void onRun() {
+        Location location = getLocation();
+
+        if (location == null) {
+            cancel();
+            return;
+        }
+
         if (xTransform == null) {
             xTransform = EquationStore.getInstance().getTransform(xEquation, variable);
             yTransform = EquationStore.getInstance().getTransform(yEquation, variable);
@@ -117,7 +126,6 @@ public class EquationEffect extends Effect {
                 z2Transform = EquationStore.getInstance().getTransform(z2Equation, variable, variable2);
             }
         }
-        Location location = getLocation();
 
         boolean hasInnerEquation = (x2Transform != null && y2Transform != null && z2Transform != null);
 

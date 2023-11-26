@@ -1,5 +1,6 @@
 package de.slikey.effectlib.effect;
 
+import org.bukkit.Particle;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
@@ -40,6 +41,7 @@ public class DonutEffect extends Effect {
     public DonutEffect(EffectManager effectManager) {
         super(effectManager);
         type = EffectType.REPEATING;
+        particle = Particle.FLAME;
         period = 10;
         iterations = 20;
     }
@@ -48,6 +50,11 @@ public class DonutEffect extends Effect {
     public void onRun() {
         Location location = getLocation();
         Vector v = new Vector();
+
+        if (location == null) {
+            cancel();
+            return;
+        }
 
         double theta;
         double phi;

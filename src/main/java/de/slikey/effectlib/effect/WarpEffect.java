@@ -1,6 +1,7 @@
 package de.slikey.effectlib.effect;
 
 import org.bukkit.Location;
+import org.bukkit.Particle;
 
 import de.slikey.effectlib.Effect;
 import de.slikey.effectlib.EffectType;
@@ -37,6 +38,7 @@ public class WarpEffect extends Effect {
     public WarpEffect(EffectManager effectManager) {
         super(effectManager);
         type = EffectType.REPEATING;
+        particle = Particle.FIREWORKS_SPARK;
         period = 2;
         iterations = rings;
     }
@@ -49,6 +51,12 @@ public class WarpEffect extends Effect {
     @Override
     public void onRun() {
         Location location = getLocation();
+
+        if (location == null) {
+            cancel();
+            return;
+        }
+
         if (step > rings) step = 0;
 
         double x, y, z;

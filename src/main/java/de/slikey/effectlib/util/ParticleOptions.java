@@ -2,7 +2,6 @@ package de.slikey.effectlib.util;
 
 import org.bukkit.Color;
 import org.bukkit.Material;
-import org.bukkit.block.data.BlockData;
 
 @SuppressWarnings({"unused"})
 public class ParticleOptions {
@@ -22,7 +21,7 @@ public class ParticleOptions {
     public Material material;
     public byte materialData;
 
-    public BlockData blockData;
+    public String blockData;
     public long blockDuration;
 
     public Object data;
@@ -62,7 +61,7 @@ public class ParticleOptions {
         this.arrivalTime = arrivalTime;
     }
 
-    public ParticleOptions(float offsetX, float offsetY, float offsetZ, float speed, int amount, float size, Color color, Color toColor, int arrivalTime, Material material, byte materialData, BlockData blockData, long blockDuration) {
+    public ParticleOptions(float offsetX, float offsetY, float offsetZ, float speed, int amount, float size, Color color, Color toColor, int arrivalTime, Material material, byte materialData, String blockData, long blockDuration) {
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         this.offsetZ = offsetZ;
@@ -78,7 +77,7 @@ public class ParticleOptions {
         this.blockDuration = blockDuration;
     }
 
-    public ParticleOptions(float offsetX, float offsetY, float offsetZ, float speed, int amount, float size, Color color, Color toColor, int arrivalTime, Material material, byte materialData, BlockData blockData, long blockDuration, int shriekDelay, float sculkChargeRotation) {
+    public ParticleOptions(float offsetX, float offsetY, float offsetZ, float speed, int amount, float size, Color color, Color toColor, int arrivalTime, Material material, byte materialData, String blockData, long blockDuration, int shriekDelay, float sculkChargeRotation) {
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         this.offsetZ = offsetZ;

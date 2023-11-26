@@ -16,70 +16,70 @@ import de.slikey.effectlib.util.RandomUtils;
 @SuppressWarnings({"unused"})
 public class TornadoEffect extends Effect {
 
-    /*
+    /**
      * Tornado particle
      */
     public Particle tornadoParticle = Particle.FLAME;
     public Color tornadoColor = null;
 
-    /*
+    /**
      * Particle of the cloud
      */
     public Particle cloudParticle = Particle.CLOUD;
     public Color cloudColor = null;
     public float cloudSpeed = 0;
 
-    /*
+    /**
      * Size of the cloud
      */
     public float cloudSize = 2.5F;
 
-    /*
+    /**
      * Y-Offset from location
      */
     public double yOffset = 0.8;
 
-    /*
+    /**
      * Height of the Tornado
      */
     public float tornadoHeight = 5F;
 
-    /*
+    /**
      * Max radius of the Tornado
      */
     public float maxTornadoRadius = 5F;
 
-    /*
+    /**
      * Should the cloud appear?
      */
     public boolean showCloud = true;
 
-    /*
+    /**
      * Should the tornado appear?
      */
     public boolean showTornado = true;
 
-    /*
+    /**
      * Distance between each row
      */
-    public double distance = 0.375;
+    public double distance = .375d;
 
-    /*
+    /**
      * Number of particles per circle
      */
     public int circleParticles = 64;
 
-    /*
+    /**
      * Number of particles in the cloud
      */
     public int cloudParticles = 100;
 
-    /*
+    /**
      * Amount of y-jitter between circle particles
      */
     public double circleHeight = 0;
 
-    /*
+    /**
      * Internal counter
      */
     protected int step = 0;
@@ -98,6 +98,11 @@ public class TornadoEffect extends Effect {
 
     @Override
     public void onRun() {
+        if (getLocation() == null) {
+            cancel();
+            return;
+        }
+
         Location l = getLocation().add(0, yOffset, 0);
         Vector vector;
 

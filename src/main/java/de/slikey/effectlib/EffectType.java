@@ -7,11 +7,11 @@ public enum EffectType {
      */
     INSTANT,
     /**
-     * Effect is several times played instantly. Set the interval with {@link Effect.period}.
+     * Effect is several times played instantly. Set the interval with {@link Effect#period}.
      */
     REPEATING,
     /**
-     * Effect is once delayed played. Set delay with {@link Effect.delay}.
+     * Effect is once delayed played. Set delay with {@link Effect#delay}.
      */
     DELAYED
 

@@ -2,6 +2,7 @@ package de.slikey.effectlib.effect;
 
 import java.util.Random;
 
+import org.bukkit.Particle;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
@@ -79,6 +80,7 @@ public class CylinderEffect extends Effect {
     public CylinderEffect(EffectManager effectManager) {
         super(effectManager);
         type = EffectType.REPEATING;
+        particle = Particle.FLAME;
         period = 2;
         iterations = 200;
     }
@@ -91,6 +93,12 @@ public class CylinderEffect extends Effect {
     @Override
     public void onRun() {
         Location location = getLocation();
+
+        if (location == null) {
+            cancel();
+            return;
+        }
+
         if (sideRatio == 0) calculateSideRatio();
 
         Random r = RandomUtils.random;

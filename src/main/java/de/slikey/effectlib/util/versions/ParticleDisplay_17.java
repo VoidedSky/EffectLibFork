@@ -10,11 +10,9 @@ import org.bukkit.Vibration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import de.slikey.effectlib.util.ParticleDisplay;
 import de.slikey.effectlib.util.ParticleOptions;
 
-@SuppressWarnings({"unused"})
-public class ParticleDisplay_17 extends ParticleDisplay {
+public class ParticleDisplay_17 extends ParticleDisplay_13 {
 
     @Override
     public void display(Particle particle, ParticleOptions options, Location center, double range, List<Player> targetPlayers) {

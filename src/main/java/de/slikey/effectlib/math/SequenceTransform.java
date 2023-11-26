@@ -38,19 +38,17 @@ public class SequenceTransform implements Transform {
     public void load(ConfigurationSection parameters) {
         steps = new ArrayList<>();
         Collection<ConfigurationSection> stepConfigurations = ConfigUtils.getNodeList(parameters, "steps");
-        if (stepConfigurations != null) {
-            for (ConfigurationSection stepConfig : stepConfigurations) {
-                steps.add(new Sequence(stepConfig));
-            }
+        for (ConfigurationSection stepConfig : stepConfigurations) {
+            steps.add(new Sequence(stepConfig));
         }
         Collections.reverse(steps);
     }
 
     @Override
-    public double get(double t) {
+    public double get(double input) {
         double value = 0;
         for (Sequence step : steps) {
-            if (step.getStart() <= t) return step.get(t);
+            if (step.getStart() <= input) return step.get(input);
         }
         return value;
     }

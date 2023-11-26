@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 
 import de.slikey.effectlib.Effect;
@@ -23,22 +24,27 @@ public class DragonEffect extends Effect {
      * Pitch of the dragon arc
      */
     public float pitch = 0.1F;
+
     /**
      * Arcs to build the breath
      */
     public int arcs = 20;
+
     /**
      * Particles per arc
      */
     public int particles = 30;
+
     /**
      * Steps per iteration
      */
     public int stepsPerIteration = 2;
+
     /**
      * Length in blocks
      */
     public float length = 4;
+
     /**
      * Current step. Works as counter
      */
@@ -47,6 +53,7 @@ public class DragonEffect extends Effect {
     public DragonEffect(EffectManager effectManager) {
         super(effectManager);
         type = EffectType.REPEATING;
+        particle = Particle.FLAME;
         period = 2;
         iterations = 200;
         rndF = new ArrayList<>(arcs);
@@ -61,6 +68,11 @@ public class DragonEffect extends Effect {
     @Override
     public void onRun() {
         Location location = getLocation();
+
+        if (location == null) {
+            cancel();
+            return;
+        }
 
         float pitch;
         float x;

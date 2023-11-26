@@ -26,7 +26,6 @@ import org.bukkit.util.Vector;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.configuration.MemoryConfiguration;
@@ -45,8 +44,8 @@ import de.slikey.effectlib.util.*;
 @SuppressWarnings({"unused"})
 public class EffectManager implements Disposable {
 
-    private static List<EffectManager> effectManagers = new ArrayList<>();
-    private static Map<String, Class<? extends Effect>> effectClasses = new HashMap<>();
+    private static final List<EffectManager> effectManagers = new ArrayList<>();
+    private static final Map<String, Class<? extends Effect>> effectClasses = new HashMap<>();
     private Plugin owningPlugin;
     private Logger logger;
     private Map<Effect, BukkitTask> effects;
@@ -126,7 +125,7 @@ public class EffectManager implements Disposable {
      * @param originEntity The origin Entity, the effect will attach to the Entity's Location
      * @param targetEntity The target Entity, only used in some Effects
      * @param parameterMap A map of parameter values to replace. These must start with the "$" character, values in the parameters map that contain a $key will be replaced with the value in this parameterMap.
-     * @return
+     * @return effect or null
      */
     @Deprecated
     public Effect start(String effectClass, ConfigurationSection parameters, Location origin, Location target, Entity originEntity, Entity targetEntity, Map<String, String> parameterMap) {
@@ -141,7 +140,7 @@ public class EffectManager implements Disposable {
      * @param origin The origin Location
      * @param target The target Location, only used in some Effects (like LineEffect)
      * @param parameterMap A map of parameter values to replace. These must start with the "$" character, values in the parameters map that contain a $key will be replaced with the value in this parameterMap.
-     * @return
+     * @return effect or null
      */
     @Deprecated
     public Effect start(String effectClass, ConfigurationSection parameters, DynamicLocation origin, DynamicLocation target, Map<String, String> parameterMap) {
@@ -171,7 +170,7 @@ public class EffectManager implements Disposable {
 
         Effect effect = null;
         try {
-            Constructor constructor = effectLibClass.getConstructor(EffectManager.class);
+            Constructor<? extends Effect> constructor = effectLibClass.getConstructor(EffectManager.class);
             effect = (Effect) constructor.newInstance(this);
         } catch (Exception ex) {
             onError("Error loading EffectLib class: " + effectClass, ex);
@@ -259,7 +258,7 @@ public class EffectManager implements Disposable {
      * @param target the target location
      * @param parameterMap a configuration of variables from the parameter config to replace
      * @param targetPlayer The player who should see this effect.
-     * @return
+     * @return effect or null
      */
     public Effect start(String effectClass, ConfigurationSection parameters, DynamicLocation origin, DynamicLocation target, ConfigurationSection parameterMap, Player targetPlayer) {
         Effect effect = getEffect(effectClass, parameters, origin, target, parameterMap, targetPlayer);
@@ -306,7 +305,6 @@ public class EffectManager implements Disposable {
             logger = null;
             display = null;
             imageCache = null;
-            owningPlugin = null;
             imageCacheFolder = null;
             effectManagers.remove(this);
         }
@@ -380,8 +378,12 @@ public class EffectManager implements Disposable {
     protected boolean setField(Object effect, String key, ConfigurationSection section, ConfigurationSection parameterMap, String logContext) {
         try {
             logContext = logContext == null ? "(?)" : logContext;
-            String stringValue = section.getString(key);
             String fieldKey = key;
+            String stringValue = section.getString(key);
+            if (stringValue == null) {
+                onError("Null value for EffectLib property " + key + " of class " + effect.getClass().getSimpleName() + " in " + logContext);
+                return false;
+            }
 
             // Allow underscore_style and dash_style parameters
             if (key.contains("-")) key = key.replace("-", "_");
@@ -427,23 +429,27 @@ public class EffectManager implements Disposable {
                 field.set(effect, value);
             } else if (field.getType().equals(Color.class)) {
                 String value = fieldSection.getString(fieldKey);
-                int rgb;
-                if (value.equalsIgnoreCase("random")) {
-                    byte red = (byte) (Math.random() * 255);
-                    byte green = (byte) (Math.random() * 255);
-                    byte blue = (byte) (Math.random() * 255);
-                    rgb = (red << 16) | (green << 8) | blue;
-                } else {
-                    if (value.startsWith("#")) value = value.substring(1);
-                    rgb = Integer.parseInt(value, 16);
+                if (value != null) {
+                    int rgb;
+                    if (value.equalsIgnoreCase("random")) {
+                        byte red = (byte) (Math.random() * 255);
+                        byte green = (byte) (Math.random() * 255);
+                        byte blue = (byte) (Math.random() * 255);
+                        rgb = (red << 16) | (green << 8) | blue;
+                    } else {
+                        if (value.startsWith("#")) value = value.substring(1);
+                        rgb = Integer.parseInt(value, 16);
+                    }
+                    field.set(effect, Color.fromRGB(rgb));
                 }
-                field.set(effect, Color.fromRGB(rgb));
             } else if (Map.class.isAssignableFrom(field.getType()) && section.isConfigurationSection(key)) {
                 Map<String, Object> map = (Map<String, Object>) field.get(effect);
                 ConfigurationSection subSection = section.getConfigurationSection(key);
-                Set<String> keys = subSection.getKeys(false);
-                for (String mapKey : keys) {
-                    map.put(mapKey, subSection.get(mapKey));
+                if (subSection != null) {
+                    Set<String> keys = subSection.getKeys(false);
+                    for (String mapKey : keys) {
+                        map.put(mapKey, subSection.get(mapKey));
+                    }
                 }
             } else if (Map.class.isAssignableFrom(field.getType()) && Map.class.isAssignableFrom(section.get(key).getClass())) {
                 field.set(effect, section.get(key));
@@ -452,40 +458,45 @@ public class EffectManager implements Disposable {
                 if (parameterMap != null) {
                     ConfigurationSection baseConfiguration = configSection;
                     configSection = new MemoryConfiguration();
-                    Set<String> keys = baseConfiguration.getKeys(false);
-                    // Note this doesn't handle sections within sections.
-                    for (String baseKey : keys) {
-                        Object baseValue = baseConfiguration.get(baseKey);
-                        if (baseValue instanceof String && ((String) baseValue).startsWith("$")) {
-                            // If this is an equation it will get parsed when needed
-                            String parameterValue = parameterMap.getString((String) baseValue);
-                            baseValue = parameterValue == null ? baseValue : parameterValue;
+                    if (baseConfiguration != null) {
+                        Set<String> keys = baseConfiguration.getKeys(false);
+                        // Note this doesn't handle sections within sections.
+                        for (String baseKey : keys) {
+                            Object baseValue = baseConfiguration.get(baseKey);
+                            if (baseValue instanceof String && ((String) baseValue).startsWith("$")) {
+                                // If this is an equation it will get parsed when needed
+                                String parameterValue = parameterMap.getString((String) baseValue);
+                                baseValue = parameterValue == null ? baseValue : parameterValue;
+                            }
+                            configSection.set(baseKey, baseValue);
                         }
-                        configSection.set(baseKey, baseValue);
                     }
                 }
                 field.set(effect, configSection);
             } else if (field.getType().equals(Vector.class)) {
                 String value = fieldSection.getString(fieldKey);
-                String[] pieces = value.split(",");
-                double x = pieces.length > 0 ? Double.parseDouble(pieces[0]) : 0;
-                double y = pieces.length > 1 ? Double.parseDouble(pieces[1]) : 0;
-                double z = pieces.length > 2 ? Double.parseDouble(pieces[2]) : 0;
-                field.set(effect, new Vector(x, y, z));
+                if (value != null) {
+                    String[] pieces = value.split(",");
+                    double x = pieces.length > 0 ? Double.parseDouble(pieces[0]) : 0;
+                    double y = pieces.length > 1 ? Double.parseDouble(pieces[1]) : 0;
+                    double z = pieces.length > 2 ? Double.parseDouble(pieces[2]) : 0;
+                    field.set(effect, new Vector(x, y, z));
+                }
             } else if (field.getType().equals(Particle.class)) {
                 String value = fieldSection.getString(fieldKey);
-                // Legacy conversions
-                if (!ParticleDisplay.hasColorTransition() && value.equalsIgnoreCase("DUST_COLOR_TRANSITION")) {
-                    value = "REDSTONE";
+                if (value != null) {
+                    // Legacy conversions
+                    if (!ParticleDisplay.hasColorTransition() && value.equalsIgnoreCase("DUST_COLOR_TRANSITION")) {
+                        value = "REDSTONE";
+                    }
+                    field.set(effect, ParticleUtil.getParticle(value));
                 }
-                field.set(effect, ParticleUtil.getParticle(value));
-            } else if (field.getType().equals(BlockData.class)) {
-                String value = fieldSection.getString(fieldKey);
-                field.set(effect, Bukkit.createBlockData(value.toLowerCase()));
             } else if (field.getType().isEnum()) {
                 Class<Enum> enumType = (Class<Enum>) field.getType();
                 String value = fieldSection.getString(fieldKey);
-                field.set(effect, Enum.valueOf(enumType, value.toUpperCase()));
+                if (value != null) {
+                    field.set(effect, Enum.valueOf(enumType, value.toUpperCase()));
+                }
             } else if (field.getType().equals(Font.class)) {
                 // Should caching the fonts be considered?
                 // Or is the performance gain negligible?

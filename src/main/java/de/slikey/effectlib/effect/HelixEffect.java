@@ -1,5 +1,6 @@
 package de.slikey.effectlib.effect;
 
+import org.bukkit.Particle;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
@@ -74,6 +75,7 @@ public class HelixEffect extends Effect {
     public HelixEffect(EffectManager effectManager) {
         super(effectManager);
         type = EffectType.REPEATING;
+        particle = Particle.FLAME;
         period = 10;
         iterations = 8;
     }
@@ -86,11 +88,15 @@ public class HelixEffect extends Effect {
     @Override
     public void onRun() {
         Location location = getLocation();
+        Vector v;
+
+        if (location == null) {
+            cancel();
+            return;
+        }
 
         float ratio;
         double angle;
-
-        Vector v;
 
         for (int i = 1; i <= strands; i++) {
             for (int j = 1; j <= particles; j++) {

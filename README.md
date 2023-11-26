@@ -12,6 +12,10 @@ You have no idea what a vector or matrix is, but you want to give your users som
 
 Find more information on [BukkitForums] [forum] or [BukkitDev] [dev]!
 
+Check out this plugin to demo all the effects:
+
+https://github.com/u9g/effectlib-visualizer
+
 Note that **this library** is no standalone plugin! You have to **create yourself a plugin** to run the effects!
 
 See here: https://github.com/elBukkit/EffectLibDemo
@@ -19,7 +23,7 @@ for a full working example.
 
 # How to Shade
 
-It is recommended to shade this plugin into yours. This way users of your plugin do not need to install EffectLib separately.
+It is recommended to shade this plugin into yours. This way, users of your plugin do not need to install EffectLib separately.
 
 This easy to do with Maven. First, add the elMakers repository:
 
@@ -37,7 +41,7 @@ This easy to do with Maven. First, add the elMakers repository:
     </repositories>
 ```
 
-Then add the EffectLib dependency:
+Then, add the EffectLib dependency:
 
 ```
         <dependency>
@@ -51,7 +55,7 @@ Then add the EffectLib dependency:
 
 Note the "compile" scope!
 
-Then finally add the Maven shade plugin:
+Finally, add the Maven shade plugin:
 
 ```
         <plugins>
@@ -91,7 +95,7 @@ Then finally add the Maven shade plugin:
         </plugins>
 ```
 
-Make sure to change the "shadedPattern" to match the base package of your own plugin
+Make sure to change the "shadedPattern" to match the base package of your own plugin!
 
 # Gradle
 
@@ -116,5 +120,3 @@ MIT
 
 [dev]:http://dev.bukkit.org/bukkit-plugins/effectlib/
 [forum]:http://forums.bukkit.org/threads/effectlib-manage-your-effects-the-nice-way-text-in-particles.259879/
-
-    

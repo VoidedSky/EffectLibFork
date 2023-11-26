@@ -4,6 +4,7 @@ import java.io.File;
 import java.awt.image.BufferedImage;
 
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.util.Vector;
 
 import de.slikey.effectlib.Effect;
@@ -108,6 +109,7 @@ public abstract class BaseImageEffect extends Effect {
     public BaseImageEffect(EffectManager effectManager) {
         super(effectManager);
         type = EffectType.REPEATING;
+        particle = Particle.REDSTONE;
         period = 2;
         iterations = 200;
     }
@@ -177,8 +179,10 @@ public abstract class BaseImageEffect extends Effect {
                     VectorUtils.rotateVector(v, rotation.getX() * MathUtils.degreesToRadians, rotation.getY() * MathUtils.degreesToRadians, rotation.getZ() * MathUtils.degreesToRadians);
                 }
 
-                if (orientPitch) VectorUtils.rotateAroundAxisX(v, Math.toRadians(location.getPitch()));
-                if (orient) VectorUtils.rotateAroundAxisY(v, -location.getYaw() * MathUtils.degreesToRadians);
+                if (location != null) {
+                    if (orientPitch) VectorUtils.rotateAroundAxisX(v, Math.toRadians(location.getPitch()));
+                    if (orient) VectorUtils.rotateAroundAxisY(v, -location.getYaw() * MathUtils.degreesToRadians);
+                }
 
                 if (enableRotation) {
                     rotX = 0;

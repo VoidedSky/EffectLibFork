@@ -88,6 +88,11 @@ public class DnaEffect extends Effect {
     public void onRun() {
         Location location = getLocation();
 
+        if (location == null) {
+            cancel();
+            return;
+        }
+
         double angle;
         Vector v;
         Particle particle;

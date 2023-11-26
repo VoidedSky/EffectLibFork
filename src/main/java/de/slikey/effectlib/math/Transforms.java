@@ -41,7 +41,6 @@ public class Transforms {
     public static Collection<Transform> loadTransformList(ConfigurationSection base, String value) {
         Collection<ConfigurationSection> transformConfigs = ConfigUtils.getNodeList(base, value);
         List<Transform> transforms = new ArrayList<>();
-        if (transformConfigs == null) return transforms;
 
         for (ConfigurationSection transformConfig : transformConfigs) {
             transforms.add(loadTransform(transformConfig));
@@ -54,32 +53,34 @@ public class Transforms {
         Transform transform = null;
         if (parameters != null && parameters.contains("class")) {
             String className = parameters.getString("class");
-            try {
-                if (!className.contains(".")) className = TRANSFORM_BUILTIN_CLASSPATH + "." + className;
+            if (className != null) {
+                try {
+                    if (!className.contains(".")) className = TRANSFORM_BUILTIN_CLASSPATH + "." + className;
 
-                Class<?> genericClass = transformClasses.get(className);
-                if (genericClass == null) {
-                    try {
-                        genericClass = Class.forName(className + "Transform");
-                    } catch (Exception ex) {
-                        genericClass = Class.forName(className);
+                    Class<?> genericClass = transformClasses.get(className);
+                    if (genericClass == null) {
+                        try {
+                            genericClass = Class.forName(className + "Transform");
+                        } catch (Exception ex) {
+                            genericClass = Class.forName(className);
+                        }
+
+                        if (!Transform.class.isAssignableFrom(genericClass)) throw new Exception("Must extend Transform");
+                        transformClasses.put(className, genericClass);
                     }
 
-                    if (!Transform.class.isAssignableFrom(genericClass)) throw new Exception("Must extend Transform");
-                    transformClasses.put(className, genericClass);
-                }
-
-                @SuppressWarnings("unchecked")
-                Class<? extends Transform> transformClass = (Class<? extends Transform>)genericClass;
-                transform = transformClass.newInstance();
-                parameters.set("class", null);
-                transform.load(parameters);
-            } catch (Exception ex) {
-                if (!effectManagers.isEmpty()) {
-                    for (EffectManager effectManager : effectManagers) {
-                        if (effectManager == null) continue;
-                        effectManager.onError("Error loading class " + className, ex);
-                        break;
+                    @SuppressWarnings("unchecked")
+                    Class<? extends Transform> transformClass = (Class<? extends Transform>)genericClass;
+                    transform = transformClass.newInstance();
+                    parameters.set("class", null);
+                    transform.load(parameters);
+                } catch (Exception ex) {
+                    if (!effectManagers.isEmpty()) {
+                        for (EffectManager effectManager : effectManagers) {
+                            if (effectManager == null) continue;
+                            effectManager.onError("Error loading class " + className, ex);
+                            break;
+                        }
                     }
                 }
             }

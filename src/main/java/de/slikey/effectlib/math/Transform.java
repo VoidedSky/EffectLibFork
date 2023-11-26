@@ -6,6 +6,6 @@ public interface Transform {
 
     public void load(ConfigurationSection parameters);
 
-    public double get(double t);
+    public double get(double input);
 
 }

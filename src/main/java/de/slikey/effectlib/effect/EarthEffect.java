@@ -137,6 +137,12 @@ public class EarthEffect extends Effect {
     @Override
     public void onRun() {
         Location location = getLocation();
+
+        if (location == null) {
+            cancel();
+            return;
+        }
+
         if (firstStep) invalidate();
 
         for (Vector v : cacheGreen) {

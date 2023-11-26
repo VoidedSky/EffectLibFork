@@ -164,9 +164,11 @@ public class CustomSound {
                 Collection<? extends Player> players = plugin.getServer().getOnlinePlayers();
                 for (Player player : players) {
                     Location location = player.getLocation();
-                    if (location.getWorld().equals(sourceLocation.getWorld()) && location.distanceSquared(sourceLocation) <= rangeSquared) {
-                        // player.playSound(sourceLocation, customSound, volume, pitch);
-                        playCustomSound(logger, player, sourceLocation, customSound, volume, pitch);
+                    if (location.getWorld() != null) {
+                        if (location.getWorld().equals(sourceLocation.getWorld()) && location.distanceSquared(sourceLocation) <= rangeSquared) {
+                            // player.playSound(sourceLocation, customSound, volume, pitch);
+                            playCustomSound(logger, player, sourceLocation, customSound, volume, pitch);
+                        }
                     }
                 }
             } catch (Exception ex) {
@@ -181,11 +183,13 @@ public class CustomSound {
                     Collection<? extends Player> players = plugin.getServer().getOnlinePlayers();
                     for (Player player : players) {
                         Location location = player.getLocation();
-                        if (location.getWorld().equals(sourceLocation.getWorld()) && location.distanceSquared(sourceLocation) <= rangeSquared) {
-                            player.playSound(sourceLocation, sound, volume, pitch);
+                        if (location.getWorld() != null) {
+                            if (location.getWorld().equals(sourceLocation.getWorld()) && location.distanceSquared(sourceLocation) <= rangeSquared) {
+                                player.playSound(sourceLocation, sound, volume, pitch);
+                            }
                         }
                     }
-                } else {
+                } else if (sourceLocation.getWorld() != null){
                     sourceLocation.getWorld().playSound(sourceLocation, sound, volume, pitch);
                 }
             } catch (Exception ex) {
@@ -209,9 +213,11 @@ public class CustomSound {
                     Collection<? extends Player> players = plugin.getServer().getOnlinePlayers();
                     for (Player player : players) {
                         Location location = player.getLocation();
-                        if (location.getWorld().equals(sourceLocation.getWorld()) && location.distanceSquared(sourceLocation) <= rangeSquared) {
-                            // player.playSound(sourceLocation, customSound, volume, pitch);
-                            playCustomSound(logger, player, sourceLocation, customSound, volume, pitch);
+                        if (location.getWorld() != null) {
+                            if (location.getWorld().equals(sourceLocation.getWorld()) && location.distanceSquared(sourceLocation) <= rangeSquared) {
+                                // player.playSound(sourceLocation, customSound, volume, pitch);
+                                playCustomSound(logger, player, sourceLocation, customSound, volume, pitch);
+                            }
                         }
                     }
                 } else if (entity instanceof Player) {
@@ -230,7 +236,7 @@ public class CustomSound {
                 if (entity instanceof Player && range <= 0) {
                     Player player = (Player) entity;
                     player.playSound(sourceLocation, sound, volume, pitch);
-                } else if (range > 0) {
+                } else if (range > 0 && sourceLocation.getWorld() != null) {
                     sourceLocation.getWorld().playSound(sourceLocation, sound, volume, pitch);
                 }
             } catch (Exception ex) {

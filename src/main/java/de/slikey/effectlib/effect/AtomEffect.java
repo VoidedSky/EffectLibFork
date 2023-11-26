@@ -87,6 +87,11 @@ public class AtomEffect extends Effect {
     public void onRun() {
         Location location = getLocation();
 
+        if (location == null) {
+            cancel();
+            return;
+        }
+
         Vector v;
         double angle;
         double xRotation;

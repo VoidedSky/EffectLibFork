@@ -15,10 +15,10 @@ public class MultiplyTransform implements Transform {
     }
 
     @Override
-    public double get(double t) {
+    public double get(double input) {
         double value = 1;
         for (Transform transform : inputs) {
-            value *= transform.get(t);
+            value *= transform.get(input);
         }
         return value;
     }

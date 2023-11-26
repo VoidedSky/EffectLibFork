@@ -11,7 +11,7 @@ import java.awt.font.FontRenderContext;
 /**
  * Based on answer at StackOverflow
  *
- * @see http://stackoverflow.com/questions/17282495/java-parsing-truetype-font-to-extract-each-characters-as-image-its-code
+ * @see <a href="http://stackoverflow.com/questions/17282495/java-parsing-truetype-font-to-extract-each-characters-as-image-its-code">...</a>
  * @author Kevin
  *
  */

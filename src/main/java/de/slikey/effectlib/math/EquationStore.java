@@ -15,7 +15,7 @@ public class EquationStore {
 
     private static final String DEFAULT_VARIABLE = "x";
     private static EquationStore instance;
-    private Map<String, EquationTransform> transforms = new HashMap<>();
+    private final Map<String, EquationTransform> transforms = new HashMap<>();
 
     public EquationTransform getTransform(String equation) {
         return getTransform(equation, DEFAULT_VARIABLE);
